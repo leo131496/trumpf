@@ -1759,6 +1759,31 @@
     </style>
   
 <style id="three-color-design">
+.redeemdlg:has(.company-machine-field.on){max-height:100%;overflow:auto}
+.redeemdlg .company-machine-field{gap:10px;padding:16px;background:var(--s);border-color:var(--line)}
+.redeemdlg .company-machine-field label:before{content:none}
+.company-quantity-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.company-machine-field .company-quantity-row label{font-size:12px;font-weight:600;color:var(--n);gap:5px}
+.company-quantity-row small{color:var(--m);font-size:10px;font-weight:400}
+.company-quantity-control{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#FFFFFF;overflow:hidden;flex:none}
+.company-quantity-control button{width:30px;height:34px;border:0;background:#FFFFFF;color:var(--b);font-size:17px}
+.company-quantity-control button:disabled{opacity:.35;cursor:default}
+.company-quantity-control input{width:42px;min-width:0;height:34px;padding:0;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:0;text-align:center;font-size:13px;appearance:textfield;-moz-appearance:textfield}
+.company-quantity-control input::-webkit-inner-spin-button,.company-quantity-control input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.company-machine-field .company-machine-label{font-size:12px;font-weight:600;color:var(--n);gap:5px;margin-top:3px}
+.company-machine-label span{font-size:10px;font-weight:400;color:var(--m)}
+.company-machine-field textarea{width:100%;min-height:64px;max-height:140px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#FFFFFF;resize:vertical;font-size:12px;line-height:1.6}
+.company-machine-field .enterprise-order-note{margin:0;font-size:10px;line-height:1.6}
+.company-machine-field .enterprise-order-note.matched{color:var(--b)}
+.company-machine-mapping{display:grid;gap:7px;max-height:130px;overflow:auto;text-align:left}
+.company-machine-mapping:empty{display:none}
+.company-machine-mapping>div{display:flex;align-items:baseline;gap:12px;font-size:11px;line-height:1.6}
+.company-machine-mapping span{color:var(--m);white-space:nowrap;flex:none}
+.company-machine-mapping strong{font-weight:500;overflow-wrap:anywhere;min-width:0}
+.enterprise-order-machines{padding:16px 0;border-bottom:1px solid var(--line)}
+.enterprise-order-machines h3{font-size:12px;margin:0 0 12px}
+.enterprise-order-card>div>div:nth-child(2){min-width:0}
+.enterprise-order-card>div span{overflow-wrap:anywhere}
 .accounttop > .avatar{display:grid;place-items:center;font-size:22px;line-height:1;color:var(--b)}
 html{color:#20252D}button,input,select,textarea{color:inherit}button{background-color:#FFFFFF;border-color:rgba(32,37,45,.10)}
 :root{--n:#20252D;--b:#0066FF;--p:#0066FF;--l:#FFFFFF;--s:rgba(32,37,45,.035);--m:rgba(32,37,45,.60);--line:rgba(32,37,45,.10);--ok:#0066FF;--bad:#20252D;--blue-soft:rgba(0,102,255,.065)}
@@ -3016,6 +3041,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         const qrRecords=[{id:'COMP-001',company:'通快智造有限公司',created:'2026-09-22 14:20',scans:28,status:'已启用'},{id:'COMP-002',company:'昆山精密制造有限公司',created:'2026-09-23 09:15',scans:12,status:'已启用'},{id:'COMP-003',company:'苏州智能装备有限公司',created:'2026-09-23 10:40',scans:0,status:'已启用'}];
         const voucherRecords=[{id:'SO-20260922018',company:'通快智造有限公司',machine:'TruLaser 5030',code:'SP-2026-000812',status:'已发送',time:'2026-09-22 16:32'},{id:'SO-20260923006',company:'昆山精密制造有限公司',machine:'TruBend 5230',code:'SP-2026-000827',status:'待发送',time:'--'},{id:'SO-20260923011',company:'苏州智能装备有限公司',machine:'TruLaser 3030',code:'SP-2026-000831',status:'已发送',time:'2026-09-23 11:08'}];
         const scanRecords=[{id:'SCAN-001',company:'通快智造有限公司',phone:'138****6028',user:'钱辰',time:'2026-09-23 10:28',status:'待审核'},{id:'SCAN-002',company:'昆山精密制造有限公司',phone:'186****3305',user:'周敏',time:'2026-09-23 09:44',status:'已通过'},{id:'SCAN-003',company:'通快智造有限公司',phone:'139****9120',user:'孙杰',time:'2026-09-22 17:18',status:'待审核'}];
+        const escapeVoucherText=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
         const buttons=[['enterpriseQr','企业二维码'],['spareVouchers','备件券发送'],['scanReviews','扫码审核']];
         const sections={};
         buttons.forEach(([key,label],index)=>{const button=document.createElement('button');button.dataset.admin=key;button.className='new-admin-nav';button.textContent=label;nav.insertBefore(button,nav.querySelector('[data-admin="requirements"]'));const section=document.createElement('section');section.className='asection admin-v3 enterprise-admin-page';section.dataset.section=key;body.appendChild(section);sections[key]=section;button.addEventListener('click',()=>activate(key,button));if(index===0)renderQrPage(section);if(index===1)renderVoucherPage(section);if(index===2)renderScanPage(section)});
@@ -3030,8 +3056,9 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         function downloadQr(record){const matrix=qrMatrix(record.id+'-'+record.company);const size=29;const cells=[];matrix.forEach((row,y)=>row.forEach((on,x)=>{if(on)cells.push('<rect x="'+(x+4)+'" y="'+(y+4)+'" width="1" height="1"/>')}));const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37"><rect width="37" height="37" fill="white"/><g fill="#20252D">'+cells.join('')+'</g></svg>';const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));link.download=record.company+'-企业二维码.svg';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),500);notify('二维码已下载，可发送给销售人员')}
         function registerScan(record){record.scans+=1;scanRecords.unshift({id:'SCAN-'+String(Date.now()).slice(-6),company:record.company,phone:'138****6028',user:'钱辰',time:'刚刚',status:'待审核'});renderQrList();renderScanRows();notify('模拟扫码数据已流入扫码审核列表')}
         function renderVoucherPage(section){section.innerHTML='<div class="atitle"><div><small>售后权益发放</small><h1>备件券发送</h1><p>维护订单对应的备件券码，并将券信息发送给对应用户。</p></div><button class="primary" data-voucher-action="new">＋ 新增</button></div><div class="voucher-notice"><b>发送规则</b><span>录入订单号、公司名称、机床号和备件券码后，点击发送即可向对应用户发放备件券；发送前仍可编辑券码信息。</span></div><div class="admin-surface"><div class="voucher-editor" id="voucherEditor"><header><strong id="voucherEditorTitle">新增备件券</strong><button data-voucher-action="close">×</button></header><div class="voucher-form"><label>订单号<input id="voucherOrder" placeholder="请输入订单号"></label><label>公司名称<input id="voucherCompany" placeholder="请输入公司名称"></label><label>机床号<input id="voucherMachine" placeholder="请输入机床号"></label><label>备件券码<input id="voucherCode" placeholder="请输入备件券码"></label><footer><button data-voucher-action="close">取消</button><button data-voucher-action="save">保存</button><button class="primary" data-voucher-action="save-send">保存并发送</button></footer></div></div><div class="voucher-table"><table><thead><tr><th>订单号</th><th>公司名称</th><th>机床号</th><th>备件券</th><th>发送时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="voucherRows"></tbody></table></div></div>';section.addEventListener('click',event=>{const action=event.target.closest('[data-voucher-action]');if(!action)return;const type=action.dataset.voucherAction;if(type==='new')openVoucherEditor();if(type==='close')closeVoucherEditor();if(type==='save')saveVoucher(false);if(type==='save-send')saveVoucher(true);if(type==='edit')openVoucherEditor(Number(action.dataset.index));if(type==='send')sendVoucher(Number(action.dataset.index))});renderVoucherRows()}
-        function renderVoucherRows(){const tbody=sections.spareVouchers.querySelector('#voucherRows');if(!tbody)return;tbody.innerHTML=voucherRecords.map((item,index)=>'<tr><td><strong>'+item.id+'</strong></td><td>'+item.company+'</td><td>'+item.machine+'</td><td>'+item.code+'</td><td class="voucher-meta">'+item.time+'</td><td><span class="status '+statusClass(item.status)+'">'+item.status+'</span></td><td><div class="voucher-actions"><button data-voucher-action="edit" data-index="'+index+'">编辑</button><button class="send" data-voucher-action="send" data-index="'+index+'">发送</button></div></td></tr>').join('')}
-        let editingVoucher=-1;function openVoucherEditor(index=-1){editingVoucher=index;const section=sections.spareVouchers;section.querySelector('#voucherEditor').classList.add('on');section.querySelector('#voucherEditorTitle').textContent=index<0?'新增备件券':'编辑备件券';const item=index<0?{id:'',company:'',machine:'',code:''}:voucherRecords[index];section.querySelector('#voucherOrder').value=item.id;section.querySelector('#voucherCompany').value=item.company;section.querySelector('#voucherMachine').value=item.machine;section.querySelector('#voucherCode').value=item.code}function closeVoucherEditor(){sections.spareVouchers.querySelector('#voucherEditor').classList.remove('on');editingVoucher=-1}function saveVoucher(send){const section=sections.spareVouchers;const item={id:section.querySelector('#voucherOrder').value.trim(),company:section.querySelector('#voucherCompany').value.trim(),machine:section.querySelector('#voucherMachine').value.trim(),code:section.querySelector('#voucherCode').value.trim(),status:send?'已发送':'待发送',time:send?'刚刚':'--'};if(!item.id||!item.company||!item.machine||!item.code){notify('请完整填写备件券信息');return}if(editingVoucher<0)voucherRecords.unshift(item);else voucherRecords[editingVoucher]=item;renderVoucherRows();closeVoucherEditor();notify(send?'备件券已发送给对应用户':'备件券信息已保存')}function sendVoucher(index){voucherRecords[index].status='已发送';voucherRecords[index].time='刚刚';renderVoucherRows();notify('备件券已发送给对应用户')}
+        window.queueEnterpriseVoucherOrder=function(order){voucherRecords.unshift({id:order.orderNo,company:document.getElementById('accountName').textContent,machine:order.machine,quantity:order.quantity,items:order.items,code:'',status:'待发送',time:'--'});renderVoucherRows()};
+        function renderVoucherRows(){const tbody=sections.spareVouchers.querySelector('#voucherRows');if(!tbody)return;tbody.innerHTML=voucherRecords.map((item,index)=>'<tr><td><strong>'+item.id+'</strong></td><td>'+item.company+'</td><td>'+escapeVoucherText(item.machine)+(item.quantity?'<small>共 '+item.quantity+' 件 · 按输入顺序对应</small>':'')+'</td><td>'+escapeVoucherText(item.code)+'</td><td class="voucher-meta">'+item.time+'</td><td><span class="status '+statusClass(item.status)+'">'+item.status+'</span></td><td><div class="voucher-actions"><button data-voucher-action="edit" data-index="'+index+'">编辑</button><button class="send" data-voucher-action="send" data-index="'+index+'">发送</button></div></td></tr>').join('')}
+        let editingVoucher=-1;function openVoucherEditor(index=-1){editingVoucher=index;const section=sections.spareVouchers;section.querySelector('#voucherEditor').classList.add('on');section.querySelector('#voucherEditorTitle').textContent=index<0?'新增备件券':'编辑备件券';const item=index<0?{id:'',company:'',machine:'',code:''}:voucherRecords[index];section.querySelector('#voucherOrder').value=item.id;section.querySelector('#voucherCompany').value=item.company;section.querySelector('#voucherMachine').value=item.machine;section.querySelector('#voucherCode').value=item.code}function closeVoucherEditor(){sections.spareVouchers.querySelector('#voucherEditor').classList.remove('on');editingVoucher=-1}function saveVoucher(send){const section=sections.spareVouchers;const item={...(editingVoucher<0?{}:voucherRecords[editingVoucher]),id:section.querySelector('#voucherOrder').value.trim(),company:section.querySelector('#voucherCompany').value.trim(),machine:section.querySelector('#voucherMachine').value.trim(),code:section.querySelector('#voucherCode').value.trim(),status:send?'已发送':'待发送',time:send?'刚刚':'--'};if(!item.id||!item.company||!item.machine||!item.code){notify('请完整填写备件券信息');return}if(editingVoucher<0)voucherRecords.unshift(item);else voucherRecords[editingVoucher]=item;renderVoucherRows();closeVoucherEditor();notify(send?'备件券已发送给对应用户':'备件券信息已保存')}function sendVoucher(index){if(!voucherRecords[index].code.trim()){openVoucherEditor(index);notify('请先填写备件券码后再发货');return}voucherRecords[index].status='已发送';voucherRecords[index].time='刚刚';renderVoucherRows();notify('备件券已发送给对应用户')}
         function renderScanPage(section){section.innerHTML='<div class="atitle"><div><small>企业绑定审核</small><h1>扫码审核</h1><p>用户扫码企业二维码后，申请信息会自动进入本列表，运营人员审核后完成企业数据绑定。</p></div></div><div class="scan-help"><strong>数据流入说明：</strong>销售人员发送企业二维码，用户扫码后提交的公司、手机号和用户名会进入这里，审核通过后再建立企业关联。</div><div class="scan-summary"><article><span>扫码总数</span><strong id="scanTotal">0</strong></article><article><span>待审核</span><strong class="pending" id="scanPending">0</strong></article><article><span>今日新增</span><strong id="scanToday">0</strong></article></div><div class="admin-surface"><div class="scan-table"><table><thead><tr><th>公司名称</th><th>用户手机号码</th><th>用户名</th><th>扫码时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="scanRows"></tbody></table></div></div>';section.addEventListener('click',event=>{const action=event.target.closest('[data-scan-action]');if(!action)return;const item=scanRecords.find(row=>row.id===action.dataset.id);if(!item)return;item.status=action.dataset.scanAction==='approve'?'已通过':'已驳回';renderScanRows();notify(item.status==='已通过'?'扫码申请已审核通过':'扫码申请已驳回')});renderScanRows()}
         function renderScanRows(){const section=sections.scanReviews;const tbody=section&&section.querySelector('#scanRows');if(!tbody)return;tbody.innerHTML=scanRecords.map(item=>'<tr><td><strong>'+item.company+'</strong><small>'+item.id+'</small></td><td>'+item.phone+'</td><td>'+item.user+'</td><td>'+item.time+'</td><td><span class="status '+statusClass(item.status)+'">'+item.status+'</span></td><td><div class="scan-actions">'+(item.status==='待审核'?'<button class="approve" data-scan-action="approve" data-id="'+item.id+'">审核通过</button><button class="reject" data-scan-action="reject" data-id="'+item.id+'">驳回</button>':'<button data-scan-action="view" data-id="'+item.id+'">查看</button>')+'</div></td></tr>').join('');const pending=scanRecords.filter(item=>item.status==='待审核').length;const total=section.querySelector('#scanTotal');const pendingNode=section.querySelector('#scanPending');const today=section.querySelector('#scanToday');if(total)total.textContent=scanRecords.length;if(pendingNode)pendingNode.textContent=pending;if(today)today.textContent=scanRecords.filter(item=>item.time==='刚刚'||item.time.startsWith('2026-09-23')).length}
       })();
@@ -3075,7 +3102,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           const items=[
             '删除个人积分规则中的活动邀约-邀约人和活动邀约-被邀约人两项，并增加注册积分配置：积分值、积分有效期、自定义天数、规则状态和保存规则。',
             '企业二维码与扫码审核合并为同一后台页面；二维码页仅保留新增、查看和下载，删除企业绑定工具及全部模拟扫码入口。',
-            '企业用户兑换备件券时必须填写机床号；兑换后订单显示待发货，后台备件券发货后订单显示已完成并展示券码。',
+            '企业用户兑换备件券时可选择件数；多个机床号使用逗号分隔，机床号数量必须与件数一致，并按输入顺序逐件关联，总积分按件数计算。订单显示件数及机床号对应关系，后台发货后显示已完成并展示券码。',
             '小程序首次使用先进行微信授权手机号匹配；匹配会员进入首页，不匹配进入注册页，个人注册包含姓名、手机号、邮箱和公司名称，企业扫码注册包含公司名称、姓名和手机号。'
           ];
           document.querySelectorAll('#admin [data-section="requirements"] ol,#mobile [data-view="requirements"] ol').forEach(list=>{
@@ -3161,9 +3188,9 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
             const button=event.target.closest('[data-voucher-action="send"], [data-voucher-action="save-send"]');
             if(!button)return;
             const row=button.closest('tr');
-            const orderNo=row&&row.cells[0]?row.cells[0].textContent.trim():'';
-            const code=row&&row.cells[3]?row.cells[3].textContent.trim():'';
-            setTimeout(()=>syncEnterpriseOrder(orderNo,code),0);
+            const orderNo=row&&row.cells[0]?row.cells[0].textContent.trim():voucherPage.querySelector('#voucherOrder').value.trim();
+            const code=row&&row.cells[3]?row.cells[3].textContent.trim():voucherPage.querySelector('#voucherCode').value.trim();
+            if(code)setTimeout(()=>syncEnterpriseOrder(orderNo,code),0);
           });
         }
 
@@ -3249,35 +3276,85 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         window.__demoRole=document.getElementById('cBtn')&&document.getElementById('cBtn').classList.contains('on')?'company':'personal';
         window.setRole=function(next){window.__demoRole=next;originalSetRole(next);syncMachineField();renderEnterpriseOrder()};
 
-        // Enterprise physical redemption requires a machine number and creates a shared order.
+        // Quantity and machine numbers apply only to the enterprise spare-voucher flow.
         function isCompanyPhysical(){return window.__demoRole==='company'&&typeof currentProduct!=='undefined'&&currentProduct&&currentProduct.kind==='physical'}
+        const spareVoucherUnitPoints=1000;
+        const escapeOrderText=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+        function getEnterpriseRedemption(){
+          const quantity=Number(document.getElementById('companyQuantity')?.value);
+          const raw=document.getElementById('companyMachineNo')?.value.trim()||'';
+          const machineNumbers=raw?raw.split(/[,，]/).map(value=>value.trim()):[];
+          const quantityValid=Number.isSafeInteger(quantity)&&quantity>0;
+          const totalPoints=quantityValid?quantity*spareVoucherUnitPoints:0;
+          const availablePoints=Number(document.getElementById('mallBalance').textContent.replace(/,/g,''));
+          const hasEmpty=machineNumbers.some(value=>!value);
+          let error='';
+          if(!quantityValid)error='请填写大于 0 的整数件数';
+          else if(totalPoints>availablePoints)error='企业可用积分不足，请减少兑换件数';
+          else if(!raw)error='请输入 '+quantity+' 个机床号，多个机床号用逗号分隔';
+          else if(hasEmpty)error='逗号之间的机床号不能为空，请补充或删除多余逗号';
+          else if(machineNumbers.length!==quantity)error='需填写 '+quantity+' 个机床号，当前已填写 '+machineNumbers.length+' 个';
+          return {quantity,quantityValid,machineNumbers,totalPoints,error};
+        }
+        function updateEnterpriseRedemption(){
+          if(!isCompanyPhysical())return;
+          const state=getEnterpriseRedemption();
+          const field=document.querySelector('.company-machine-field');
+          const input=document.getElementById('companyMachineNo');
+          const quantity=document.getElementById('companyQuantity');
+          const status=document.getElementById('companyMachineStatus');
+          if(!field||!input||!quantity||!status)return;
+          document.getElementById('redeemText').innerHTML=state.quantityValid?'是否确认使用 <strong>'+state.totalPoints.toLocaleString()+' 积分</strong>兑换 <strong>'+state.quantity+' 件</strong>“1000元备件券”？':'请选择兑换件数并填写对应机床号。';
+          status.textContent=state.error||'已填写 '+state.machineNumbers.length+' 个机床号，与兑换件数一致';
+          status.classList.toggle('matched',!state.error);
+          input.setAttribute('aria-invalid',String(Boolean(input.value.trim()&&state.error)));
+          quantity.setAttribute('aria-invalid',String(!state.quantityValid));
+          document.getElementById('companyQuantityDecrease').disabled=!state.quantityValid||state.quantity<=1;
+          const confirm=document.querySelector('#redeemActions button:last-child');
+          if(confirm)confirm.disabled=Boolean(state.error);
+          const mapping=document.getElementById('companyMachineMapping');
+          mapping.replaceChildren();
+          if(!state.error)state.machineNumbers.forEach((machine,index)=>{
+            const row=document.createElement('div');
+            const label=document.createElement('span');label.textContent='第 '+(index+1)+' 件';
+            const value=document.createElement('strong');value.textContent=machine;
+            row.append(label,value);mapping.appendChild(row);
+          });
+        }
         function syncMachineField(){
           const dialog=document.querySelector('.redeemdlg');
           const redeemBg=document.getElementById('redeembg');
           if(!dialog)return;
+          const companyVoucher=isCompanyPhysical();
           const address=document.getElementById('deliveryAddress');
-          if(address&&typeof currentProduct!=='undefined'&&currentProduct)address.style.display=isCompanyPhysical()?'none':currentProduct.kind==='physical'?'grid':'none';
+          if(address&&typeof currentProduct!=='undefined'&&currentProduct)address.style.display=companyVoucher?'none':currentProduct.kind==='physical'?'grid':'none';
           const notice=document.getElementById('productNotice');
-          if(notice&&isCompanyPhysical())notice.textContent='兑换后将生成待发货订单，后台发放备件券后订单更新为已完成。';
-          document.querySelectorAll('.company-machine-field').forEach(item=>{if(!dialog.contains(item))item.remove()});
+          if(notice&&companyVoucher)notice.textContent='兑换时选择件数，并填写等量机床号；后台发放备件券后订单更新为已完成。';
           let field=dialog.querySelector('.company-machine-field');
-          if(!field){field=document.createElement('div');field.className='company-machine-field';field.innerHTML='<label>机床号<input id="companyMachineNo" placeholder="请输入机床号"></label><span class="enterprise-order-note">企业兑换备件券必须填写机床号，内容不做格式校验。</span>';dialog.insertBefore(field,document.getElementById('redeemActions'))}
-          field.classList.toggle('on',isCompanyPhysical()&&Boolean(redeemBg&&redeemBg.classList.contains('on')));
-          const input=field.querySelector('input');
-          const button=dialog.querySelector('#redeemActions button:last-child');
-          if(input&&button){const update=()=>{button.disabled=isCompanyPhysical()&&!input.value.trim()};input.oninput=update;update()}
+          if(!field){
+            field=document.createElement('div');field.className='company-machine-field';
+            field.innerHTML='<div class="company-quantity-row"><label for="companyQuantity">兑换件数<small>每件 1,000 积分</small></label><div class="company-quantity-control"><button type="button" id="companyQuantityDecrease" aria-label="减少兑换件数">−</button><input type="number" id="companyQuantity" value="1" min="1" step="1" inputmode="numeric" aria-label="兑换件数"><button type="button" id="companyQuantityIncrease" aria-label="增加兑换件数">＋</button></div></div><label class="company-machine-label" for="companyMachineNo">机床号<span>按输入顺序与每件备件券对应</span></label><textarea id="companyMachineNo" rows="2" placeholder="例如：TK001, TK002" aria-describedby="companyMachineStatus" spellcheck="false"></textarea><span id="companyMachineStatus" class="enterprise-order-note" role="status" aria-live="polite"></span><div id="companyMachineMapping" class="company-machine-mapping"></div>';
+            dialog.insertBefore(field,document.getElementById('redeemActions'));
+            field.querySelector('#companyQuantity').addEventListener('input',updateEnterpriseRedemption);
+            field.querySelector('#companyMachineNo').addEventListener('input',updateEnterpriseRedemption);
+            const changeQuantity=delta=>{const input=field.querySelector('#companyQuantity');const value=Number(input.value);input.value=String(Math.max(1,(Number.isSafeInteger(value)&&value>0?value:1)+delta));updateEnterpriseRedemption()};
+            field.querySelector('#companyQuantityDecrease').onclick=()=>changeQuantity(-1);
+            field.querySelector('#companyQuantityIncrease').onclick=()=>changeQuantity(1);
+          }
+          const active=companyVoucher&&Boolean(redeemBg?.classList.contains('on'))&&document.getElementById('redeemTitle').textContent==='确认兑换';
+          field.classList.toggle('on',active);
+          if(active)updateEnterpriseRedemption();
         }
         const originalOpenProduct=window.openProduct;
         window.openProduct=function(id){originalOpenProduct(id);syncMachineField()};
         const originalOpenRedeem=window.openRedeem;
         window.openRedeem=function(){
-          originalOpenRedeem();
-          if(isCompanyPhysical()){
-            const text=document.getElementById('redeemText');
-            if(text)text.innerHTML='是否确认使用 <strong>1,000 积分</strong>兑换“1000元备件券”？';
-          }
-          const input=document.getElementById('companyMachineNo');
-          if(input)input.value='';
+          if(!isCompanyPhysical()){originalOpenRedeem();syncMachineField();return}
+          document.getElementById('redeemTitle').textContent='确认兑换';
+          document.getElementById('redeemActions').innerHTML='<button onclick="closeRedeem()">取消</button><button onclick="confirmRedeem()">确认兑换</button>';
+          document.getElementById('redeembg').classList.add('on');
+          document.getElementById('companyQuantity').value='1';
+          document.getElementById('companyMachineNo').value='';
           syncMachineField();
         };
         window.__enterpriseOrder=null;
@@ -3287,15 +3364,16 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         }
         const originalConfirmRedeem=window.confirmRedeem;
         window.confirmRedeem=function(){
-          if(isCompanyPhysical()){
-            const machine=document.getElementById('companyMachineNo');
-            if(!machine||!machine.value.trim()){notifySafe('请填写机床号后再确认兑换');return}
-            window.__enterpriseOrder={orderNo:'JF-ENT-'+Date.now().toString().slice(-8),name:'备件券 · '+document.getElementById('productName').textContent,points:document.getElementById('productPoints').textContent,machine:machine.value.trim(),status:'pending',code:'',createdAt:'刚刚'};
-            renderEnterpriseOrder();
-          }
+          if(!isCompanyPhysical()){originalConfirmRedeem();return}
+          const state=getEnterpriseRedemption();
+          if(state.error){updateEnterpriseRedemption();notifySafe(state.error);return}
+          const order={orderNo:'JF-ENT-'+Date.now().toString().slice(-8),name:'1000元备件券',quantity:state.quantity,unitPoints:spareVoucherUnitPoints,points:state.totalPoints.toLocaleString(),machine:state.machineNumbers.join(', '),items:state.machineNumbers.map((machine,index)=>({number:index+1,machine})),status:'pending',code:'',createdAt:'刚刚'};
+          window.__enterpriseOrder=order;
+          if(typeof window.queueEnterpriseVoucherOrder==='function')window.queueEnterpriseVoucherOrder(order);
+          renderEnterpriseOrder();
           originalConfirmRedeem();
-          const field=document.querySelector('.redeemdlg .company-machine-field');
-          if(field)field.classList.remove('on');
+          document.getElementById('redeemText').textContent='已兑换 '+order.quantity+' 件备件券，共使用 '+order.points+' 积分。订单已生成，等待后台发货；每件备件券已关联对应机床号。';
+          document.querySelector('.redeemdlg .company-machine-field').classList.remove('on');
         };
         function renderEnterpriseOrder(){
           const list=document.querySelector('[data-view="orders"] .order-list');
@@ -3308,12 +3386,13 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           if(!card){card=document.createElement('article');card.className='order order-card enterprise-order-card';list.appendChild(card)}
           card.dataset.orderStatus=done?'done':'pending';
           card.onclick=()=>openEnterpriseOrderDetail();
-          card.innerHTML='<header><span>'+order.createdAt+'</span><span>订单号：'+order.orderNo+'</span></header><div><div class="ordericon physical">券</div><div><strong>【积分兑换】'+order.name+'</strong><span>机床号：'+order.machine+(done?' · 券码已发放':'')+'</span><b>'+order.points+' 积分</b></div><em>x1</em></div><footer><span class="order-status '+(done?'done':'pending')+'">'+(done?'已完成':'待发货')+'</span>'+(done?'<small>备件券码：'+order.code+'</small>':'')+'<b>查看详情 ›</b></footer>';
+          card.innerHTML='<header><span>'+order.createdAt+'</span><span>订单号：'+order.orderNo+'</span></header><div><div class="ordericon physical">券</div><div><strong>【积分兑换】'+order.name+'</strong><span>机床号：'+escapeOrderText(order.machine)+'</span><b>'+order.points+' 积分</b></div><em>x'+order.quantity+'</em></div><footer><span class="order-status '+(done?'done':'pending')+'">'+(done?'已完成':'待发货')+'</span>'+(done?'<small>备件券码：'+escapeOrderText(order.code)+'</small>':'')+'<b>查看详情 ›</b></footer>';
         }
         window.openEnterpriseOrderDetail=function(){
           const order=window.__enterpriseOrder;if(!order)return;
           const done=order.status==='done';
-          document.getElementById('orderDetailContent').innerHTML='<article class="order-detail-card"><header><div><span>订单编号：'+order.orderNo+'</span><span>下单时间：'+order.createdAt+'</span></div><em class="order-status '+(done?'done':'pending')+'">'+(done?'已完成':'待发货')+'</em></header><section class="detail-product"><div class="ordericon physical">券</div><div><strong>'+order.name+'</strong><span>机床号：'+order.machine+'</span><b>'+order.points+' 积分</b></div><em>x1</em></section><section class="detail-logistics"><i>▰</i><div><span class="strong">'+(done?'备件券码：'+order.code:'订单已生成，等待后台发货')+'</span><span>'+(done?'发货时间：'+order.shippedAt:'后台备件券发货后，订单将更新为已完成。')+'</span></div></section></article>';
+          const mapping=order.items.map(item=>'<div><span>第 '+item.number+' 件</span><strong>'+escapeOrderText(item.machine)+'</strong></div>').join('');
+          document.getElementById('orderDetailContent').innerHTML='<article class="order-detail-card"><header><div><span>订单编号：'+order.orderNo+'</span><span>下单时间：'+order.createdAt+'</span></div><em class="order-status '+(done?'done':'pending')+'">'+(done?'已完成':'待发货')+'</em></header><section class="detail-product"><div class="ordericon physical">券</div><div><strong>'+order.name+'</strong><span>共 '+order.quantity+' 件 · 每件 '+order.unitPoints.toLocaleString()+' 积分</span><b>合计 '+order.points+' 积分</b></div><em>x'+order.quantity+'</em></section><section class="enterprise-order-machines"><h3>机床号对应关系</h3><div class="company-machine-mapping">'+mapping+'</div></section><section class="detail-logistics"><i>▰</i><div><span class="strong">'+(done?'备件券码：'+escapeOrderText(order.code):'订单已生成，等待后台发货')+'</span><span>'+(done?'发货时间：'+order.shippedAt:'后台备件券发货后，订单将更新为已完成。')+'</span></div></section></article>';
           showView('orderDetail');
         };
         function addScanReviewRow(company,name,phone){
