@@ -3102,7 +3102,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           const items=[
             '删除个人积分规则中的活动邀约-邀约人和活动邀约-被邀约人两项，并增加注册积分配置：积分值、积分有效期、自定义天数、规则状态和保存规则。',
             '企业二维码与扫码审核合并为同一后台页面；二维码页仅保留新增、查看和下载，删除企业绑定工具及全部模拟扫码入口。',
-            '企业用户兑换备件券时可选择件数；多个机床号使用逗号分隔，机床号数量必须与件数一致，并按输入顺序逐件关联，总积分按件数计算。订单显示件数及机床号对应关系，后台发货后显示已完成并展示券码。',
+            '企业用户兑换备件券时可选择兑换数量；多个机床号使用逗号分隔，机床号数量必须与兑换数量一致，并按输入顺序逐件关联，总积分按兑换数量计算。订单显示兑换数量及机床号对应关系，后台发货后显示已完成并展示券码。',
             '小程序首次使用先进行微信授权手机号匹配；匹配会员进入首页，不匹配进入注册页，个人注册包含姓名、手机号、邮箱和公司名称，企业扫码注册包含公司名称、姓名和手机号。'
           ];
           document.querySelectorAll('#admin [data-section="requirements"] ol,#mobile [data-view="requirements"] ol').forEach(list=>{
@@ -3289,11 +3289,11 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           const availablePoints=Number(document.getElementById('mallBalance').textContent.replace(/,/g,''));
           const hasEmpty=machineNumbers.some(value=>!value);
           let error='';
-          if(!quantityValid)error='请填写大于 0 的整数件数';
-          else if(totalPoints>availablePoints)error='企业可用积分不足，请减少兑换件数';
-          else if(!raw)error='请输入 '+quantity+' 个机床号，多个机床号用逗号分隔';
+          if(!quantityValid)error='请填写大于 0 的整数数量';
+          else if(totalPoints>availablePoints)error='企业可用积分不足，请减少兑换数量';
+          else if(!raw)error='请填写机床号，需填写 '+quantity+' 个，多个机床号用逗号分隔';
           else if(hasEmpty)error='逗号之间的机床号不能为空，请补充或删除多余逗号';
-          else if(machineNumbers.length!==quantity)error='需填写 '+quantity+' 个机床号，当前已填写 '+machineNumbers.length+' 个';
+          else if(machineNumbers.length!==quantity)error='机床号数量与兑换数量不一致，需填写 '+quantity+' 个，当前已填写 '+machineNumbers.length+' 个';
           return {quantity,quantityValid,machineNumbers,totalPoints,error};
         }
         function updateEnterpriseRedemption(){
@@ -3304,14 +3304,14 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           const quantity=document.getElementById('companyQuantity');
           const status=document.getElementById('companyMachineStatus');
           if(!field||!input||!quantity||!status)return;
-          document.getElementById('redeemText').innerHTML=state.quantityValid?'是否确认使用 <strong>'+state.totalPoints.toLocaleString()+' 积分</strong>兑换 <strong>'+state.quantity+' 件</strong>“1000元备件券”？':'请选择兑换件数并填写对应机床号。';
-          status.textContent=state.error||'已填写 '+state.machineNumbers.length+' 个机床号，与兑换件数一致';
+          document.getElementById('redeemText').innerHTML=state.quantityValid?'是否确认使用 <strong>'+state.totalPoints.toLocaleString()+' 积分</strong>兑换 <strong>'+state.quantity+' 件</strong>“1000元备件券”？':'请选择兑换数量并填写对应机床号。';
+          status.textContent=state.error||'已填写 '+state.machineNumbers.length+' 个机床号，与兑换数量一致';
           status.classList.toggle('matched',!state.error);
           input.setAttribute('aria-invalid',String(Boolean(input.value.trim()&&state.error)));
           quantity.setAttribute('aria-invalid',String(!state.quantityValid));
           document.getElementById('companyQuantityDecrease').disabled=!state.quantityValid||state.quantity<=1;
           const confirm=document.querySelector('#redeemActions button:last-child');
-          if(confirm)confirm.disabled=Boolean(state.error);
+          if(confirm)confirm.disabled=false;
           const mapping=document.getElementById('companyMachineMapping');
           mapping.replaceChildren();
           if(!state.error)state.machineNumbers.forEach((machine,index)=>{
@@ -3329,11 +3329,11 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           const address=document.getElementById('deliveryAddress');
           if(address&&typeof currentProduct!=='undefined'&&currentProduct)address.style.display=companyVoucher?'none':currentProduct.kind==='physical'?'grid':'none';
           const notice=document.getElementById('productNotice');
-          if(notice&&companyVoucher)notice.textContent='兑换时选择件数，并填写等量机床号；后台发放备件券后订单更新为已完成。';
+          if(notice&&companyVoucher)notice.textContent='兑换时选择兑换数量，并填写等量机床号；后台发放备件券后订单更新为已完成。';
           let field=dialog.querySelector('.company-machine-field');
           if(!field){
             field=document.createElement('div');field.className='company-machine-field';
-            field.innerHTML='<div class="company-quantity-row"><label for="companyQuantity">兑换件数<small>每件 1,000 积分</small></label><div class="company-quantity-control"><button type="button" id="companyQuantityDecrease" aria-label="减少兑换件数">−</button><input type="number" id="companyQuantity" value="1" min="1" step="1" inputmode="numeric" aria-label="兑换件数"><button type="button" id="companyQuantityIncrease" aria-label="增加兑换件数">＋</button></div></div><label class="company-machine-label" for="companyMachineNo">机床号<span>按输入顺序与每件备件券对应</span></label><textarea id="companyMachineNo" rows="2" placeholder="例如：TK001, TK002" aria-describedby="companyMachineStatus" spellcheck="false"></textarea><span id="companyMachineStatus" class="enterprise-order-note" role="status" aria-live="polite"></span><div id="companyMachineMapping" class="company-machine-mapping"></div>';
+            field.innerHTML='<div class="company-quantity-row"><label for="companyQuantity">兑换数量<small>每件 1,000 积分</small></label><div class="company-quantity-control"><button type="button" id="companyQuantityDecrease" aria-label="减少兑换数量">−</button><input type="number" id="companyQuantity" value="1" min="1" step="1" inputmode="numeric" aria-label="兑换数量"><button type="button" id="companyQuantityIncrease" aria-label="增加兑换数量">＋</button></div></div><label class="company-machine-label" for="companyMachineNo">机床号<span>按输入顺序与每件备件券对应</span></label><textarea id="companyMachineNo" rows="2" placeholder="例如：TK001, TK002" aria-describedby="companyMachineStatus" spellcheck="false"></textarea><span id="companyMachineStatus" class="enterprise-order-note" role="status" aria-live="polite"></span><div id="companyMachineMapping" class="company-machine-mapping"></div>';
             dialog.insertBefore(field,document.getElementById('redeemActions'));
             field.querySelector('#companyQuantity').addEventListener('input',updateEnterpriseRedemption);
             field.querySelector('#companyMachineNo').addEventListener('input',updateEnterpriseRedemption);
@@ -3366,7 +3366,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         window.confirmRedeem=function(){
           if(!isCompanyPhysical()){originalConfirmRedeem();return}
           const state=getEnterpriseRedemption();
-          if(state.error){updateEnterpriseRedemption();notifySafe(state.error);return}
+          if(state.error){updateEnterpriseRedemption();const input=document.getElementById(state.quantityValid?'companyMachineNo':'companyQuantity');input.setAttribute('aria-invalid','true');input.focus({preventScroll:true});notifySafe(state.error);return}
           const order={orderNo:'JF-ENT-'+Date.now().toString().slice(-8),name:'1000元备件券',quantity:state.quantity,unitPoints:spareVoucherUnitPoints,points:state.totalPoints.toLocaleString(),machine:state.machineNumbers.join(', '),items:state.machineNumbers.map((machine,index)=>({number:index+1,machine})),status:'pending',code:'',createdAt:'刚刚'};
           window.__enterpriseOrder=order;
           if(typeof window.queueEnterpriseVoucherOrder==='function')window.queueEnterpriseVoucherOrder(order);
