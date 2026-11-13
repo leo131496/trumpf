@@ -1796,7 +1796,7 @@ html{color:#20252D}button,input,select,textarea{color:inherit}button{background-
 body{background:#FFFFFF;color:var(--n);font-family:"PingFang SC","Source Han Sans SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
 button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}button{transition:background .18s,box-shadow .18s,transform .18s}button:hover{filter:brightness(.98)}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--b);outline-offset:3px}
 .demo-header{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 30px;border-bottom:1px solid var(--line);background:#FFFFFF;position:relative;z-index:15}
-.demo-brand{display:flex;gap:18px;align-items:center;text-decoration:none;color:var(--b);font-size:24px;letter-spacing:-1.5px;font-weight:900}.demo-brand>span{padding-left:18px;border-left:1px solid var(--line);font-size:15px;color:var(--n);letter-spacing:.5px;font-weight:600}.demo-brand small{display:block;margin-top:4px;font-size:9px;letter-spacing:1.6px;color:var(--m);font-weight:500}
+.demo-brand{display:flex;align-items:center;text-decoration:none;color:var(--n);font-size:20px;letter-spacing:0;font-weight:700;white-space:nowrap}
 .demo-modes{display:flex;padding:4px;background:var(--s);border-radius:9px;gap:3px}.demo-modes button{border:0;background:transparent;color:var(--m);padding:9px 16px;font-size:12px;border-radius:6px;font-weight:600}.demo-modes button.active{color:var(--b);background:#FFFFFF;box-shadow:0 2px 7px rgba(32,37,45,.06)}.demo-badge{display:flex;align-items:center;gap:7px;color:var(--m);font-size:11px;white-space:nowrap}.demo-badge i{width:6px;height:6px;border-radius:50%;background:var(--b)}
 .stage{height:calc(100dvh - 78px);min-height:660px;grid-template-columns:minmax(0,1fr) 410px;grid-template-rows:100%;background:var(--s)}
 .admin,.admin.on{height:100%;min-height:0;grid-template-columns:200px minmax(0,1fr)}.side{padding:26px 14px;background:#FFFFFF;color:var(--n);border-right:1px solid var(--line)}.side>.brand{display:none}.side:before{content:'运营管理';display:block;padding:0 14px 20px;color:var(--m);font-size:10px;font-weight:500;letter-spacing:2px}.side nav{gap:7px;counter-reset:item}.side nav button{display:flex;gap:12px;align-items:center;padding:13px 14px;color:var(--m);border-radius:8px;font-size:12px;font-weight:500;white-space:nowrap}.side nav button:before{counter-increment:item;content:counter(item,decimal-leading-zero);font-size:10px;font-variant-numeric:tabular-nums;opacity:.55}.side nav button:hover{background:var(--s)}.side nav button.on{background:var(--blue-soft);color:var(--b);font-weight:700}.side nav button.on:before{opacity:1}
@@ -1821,12 +1821,12 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
 
 </head>
   <body data-screen="split">
-<header class="demo-header"><a class="demo-brand" href="./" aria-label="通快积分中心首页">TRUMPF<span>客户积分中心<small>CUSTOMER REWARDS</small></span></a><nav class="demo-modes" aria-label="演示模式"><button data-mode="split" class="active">双屏演示</button><button data-mode="phone">小程序演示</button><button data-mode="admin">运营后台</button></nav><span class="demo-badge"><i></i>交互演示版</span></header>
+<header class="demo-header"><a class="demo-brand" href="./" aria-label="通快客户积分中心首页">通快客户积分中心</a><nav class="demo-modes" aria-label="演示模式"><button data-mode="split" class="active">双屏演示</button><button data-mode="phone">小程序演示</button><button data-mode="admin">运营后台</button></nav><span class="demo-badge"><i></i>交互演示版</span></header>
     <main class="stage">
       <div class="preview-title"><div><span>小程序实时预览</span><strong>通快客户积分中心</strong></div><small>小程序预览</small></div>
       <section class="phone" id="mobile">
         <header class="head">
-          <div><span class="brand">TRUMPF</span><strong>客户积分中心</strong></div>
+          <div><strong>通快客户积分中心</strong></div>
           <button class="role-switch-mini" id="homeRoleToggle" onclick="switchHomeRole()" aria-label="切换为企业身份"><i id="roleSwitchIcon">企</i><span id="roleSwitchLabel">企业</span></button>
         </header>
         <div class="content">
@@ -2742,7 +2742,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           "poster",
           "个人专属邀约",
           title,
-          '<div class="poster"><span class="brand">TRUMPF</span><h3>' +
+          '<div class="poster"><h3>' +
             title +
             "</h3><p>扫码完成注册或活动留资</p><div>▦ 钱辰的专属二维码</div></div><p>每人 +" +
             pt +
