@@ -27,6 +27,8 @@ const { chromium } = require('playwright');
     const firstId = await rows.first().getAttribute('data-share-activity');
     const firstName = await rows.first().locator('strong').innerText();
     const secondId = await rows.nth(1).getAttribute('data-share-activity');
+    // This admin regression needs a pending row to exercise the reject action.
+    await page.evaluate(id => {reviews.find(r=>r.activityId===id).s='pending'},secondId);
     const returnToList = () => page.locator('[data-admin="review"]').click();
     const first = page.locator(`[data-share-activity="${firstId}"]`);
     assert.ok(await first.getByRole('switch').isChecked());
@@ -163,7 +165,7 @@ const { chromium } = require('playwright');
     await page.evaluate(() => closeImageOnly());
     await page.locator('#reviewRowsV2').getByRole('button',{name:'查看详情',exact:true}).click();
     assert.ok(await page.locator('#reviewModalV2').isVisible());
-    assert.match(await page.locator('#reviewDetailContentV2').innerText(), /王海峰/);
+    assert.match(await page.locator('#reviewDetailContentV2').innerText(), /钱辰/);
     assert.equal(await page.locator('#reviewDetailContentV2 .review-attachments button').count(), 3);
     await page.evaluate(() => closeReviewDetailV2());
     assert.equal(await page.evaluate(() => getActivityReviews()[0].s), 'pending');

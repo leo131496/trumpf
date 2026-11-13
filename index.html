@@ -1863,6 +1863,33 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
 #shareActivityReview .atitle p{overflow-wrap:anywhere}
 @media(max-width:700px){.share-search{padding:15px;gap:8px}.share-search input{width:calc(100% - 72px)}.share-form-grid{grid-template-columns:minmax(0,1fr);gap:20px}.share-activity-form,.share-activity-detail{padding:20px}.share-period>div{gap:8px}.share-period input{padding:0 6px!important;font-size:11px!important}.share-activity-detail>div{grid-template-columns:72px minmax(0,1fr);gap:12px}#shareActivityReview .atitle{flex-wrap:wrap}}
 </style>
+<style id="content-sharing-styles">
+#mobile [hidden]{display:none!important}
+#mobile .proof-tabs{overflow-x:auto;gap:16px;scrollbar-width:thin;padding-top:2px}
+#mobile .proof-tabs button{flex:none;white-space:nowrap}
+#mobile .proof-record header{align-items:flex-start;gap:8px}
+#mobile .proof-record .proof-tags{min-width:0;flex-wrap:wrap;gap:5px}
+#mobile .proof-tags span{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#mobile .proof-record header>.status{flex:none}
+#mobile .proof-record h3{overflow-wrap:anywhere;line-height:1.65}
+#mobile .proof-record p{line-height:1.8;overflow-wrap:anywhere}
+#mobile .proof-record footer button:disabled{background:rgba(32,37,45,.04);border-color:var(--line);color:var(--m);cursor:not-allowed}
+.proof-activity-name{font-size:12px;line-height:1.7;color:var(--m);overflow-wrap:anywhere;margin:0 2px 16px}
+.proof-form .upload-panel{margin-top:0}
+#proofImages .proof-image-item{position:relative;min-width:0}
+#proofImages .proof-image-preview{display:block;width:100%;aspect-ratio:1;padding:0;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#FFFFFF}
+#proofImages img,.proof-attachment img{display:block;width:100%;height:100%;object-fit:cover}
+#proofImages .proof-image-remove{position:absolute;right:3px;top:3px;width:24px;height:24px;border:1px solid var(--line);border-radius:50%;background:#FFFFFF;color:var(--n);font-size:17px;padding:0}
+#proofImageCount{display:block;text-align:right;margin-top:8px;color:var(--m);font-size:10px}
+.proof-form .proof-upload-error{background:var(--blue-soft);border-left:2px solid var(--b);padding:9px;color:var(--n);line-height:1.7}
+.proof-form button:disabled{opacity:.55;cursor:not-allowed}
+.content-share-empty{padding:22px 12px;text-align:center;color:var(--m);font-size:11px;line-height:1.7}
+.content-share-details{margin:16px 0;font-size:11px;line-height:1.8}
+.content-share-details>div{padding:10px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px}
+.content-share-details dt{color:var(--m)}.content-share-details dd{margin:0;overflow-wrap:anywhere}.content-share-details a{color:var(--b)}
+.proof-attachments .proof-attachment{padding:0;overflow:hidden}
+#contentShareTodoHome .task{width:100%}
+</style>
 </head>
   <body data-screen="split">
 <header class="demo-header"><a class="demo-brand" href="./" aria-label="通快客户积分中心首页">通快客户积分中心</a><nav class="demo-modes" aria-label="演示模式"><button data-mode="split" class="active">双屏演示</button><button data-mode="phone">小程序演示</button><button data-mode="admin">运营后台</button></nav><span class="demo-badge"><i></i>交互演示版</span></header>
@@ -1915,7 +1942,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
             <div id="personalHome">
               <div class="grid">
                 <button onclick="showView('tasks')">
-                  <i><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m7 15 3-3 2 2 3-4 2 3"/><circle cx="9" cy="8" r="1"/></svg></i><strong>分享凭证</strong><span>上传与查询记录</span></button
+                  <i><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m7 15 3-3 2 2 3-4 2 3"/><circle cx="9" cy="8" r="1"/></svg></i><strong>内容分享</strong><span>上传与查询记录</span></button
                 ><button onclick="showView('invite')">
                   <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><path d="M14 14h2v2h-2zM18 14h2v6h-6v-2"/></svg></i><strong>专属邀约</strong><span>注册留资计分</span></button
                 ><button onclick="showView('mall')">
@@ -1925,14 +1952,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
                 <div><h2>待办事项</h2></div>
                 <button onclick="showView('todos')">更多 ›</button>
               </div>
-              <button class="task reject-task" onclick="retryProof('PZ-20260918-002')">
-                <b>!</b>
-                <div>
-                  <span>分享凭证已驳回</span><strong>钣金柔性生产客户案例分享</strong
-                  ><small>截图未显示完整分享页面，请补充后重新提交。</small>
-                </div>
-                <b>›</b>
-              </button>
+              <div id="contentShareTodoHome"></div>
             </div>
             <div id="companyHome" style="display: none">
               <div class="title">
@@ -1957,19 +1977,27 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           <section class="view" data-view="tasks">
             <div class="proof-page-head">
               <div>
-                <h1>分享凭证</h1>
-                <p>查看提交记录与审核进度</p>
+                <h1>内容分享</h1>
+                <p>参与内容分享活动，补全截图并查看审核进度</p>
               </div>
-              <button class="primary" onclick="startNewProof()">＋ 新增凭证</button>
             </div>
-            <div class="proof-tabs">
-              <button class="on" onclick="proofFilter('all',this)">全部</button><button onclick="proofFilter('approved',this)">审核通过</button><button onclick="proofFilter('rejected',this)">审核驳回</button><button onclick="proofFilter('pending',this)">审批中</button>
-            </div>
+            <div class="proof-tabs"><button data-proof-filter="all" onclick="proofFilter('all')" class="on">全部</button><button data-proof-filter="todo" onclick="proofFilter('todo')">待补全</button><button data-proof-filter="pending" onclick="proofFilter('pending')">审核中</button><button data-proof-filter="approved" onclick="proofFilter('approved')">审核通过</button><button data-proof-filter="rejected" onclick="proofFilter('rejected')">审核驳回</button><button data-proof-filter="expired" onclick="proofFilter('expired')">已过期</button></div>
             <div id="taskArea"></div>
           </section>
           <section class="view" data-view="newProof">
-            <div class="subhead"><button onclick="showView('tasks')">‹</button><strong id="proofFormTitle">新增分享凭证</strong><span></span></div>
-            <div class="proof-form"><div class="resubmit-tip" id="resubmitTip" style="display:none"><b>!</b><div><strong>审核未通过，已回显原提交内容</strong><span id="resubmitReason"></span></div></div><label><span>标题名称（必填）</span><textarea id="proofTitle" maxlength="255" oninput="updateCount()" placeholder="请输入分享链接的名称"></textarea><small id="titleCount">0 / 255</small></label><div class="proof-source-fields"><label><span>分享渠道（必填）</span><select id="proofShareChannel"><option>微信朋友圈</option><option>微信好友</option></select></label><label><span>内容来源（必填）</span><select id="proofContentSource"><option>视频号</option><option>公众号</option></select></label></div><div class="upload-panel"><strong>上传图片（必填）</strong><p id="uploadHint">支持批量上传，最多 9 张；仅支持 JPG、PNG、WEBP 图片。</p><button onclick="addProofImages()">▧ 批量上传图片</button><div id="proofImages"></div></div><div class="proof-tip"><b>提交说明</b><span id="proofSubmitHint">提交后进入后台审批；审核驳回时会在首页待办与记录列表中同步提醒。</span></div><button class="mainbtn" id="proofSubmitButton" onclick="submitNewProof()">提交审核</button></div>
+            <div class="subhead"><button onclick="showView('tasks')" aria-label="返回内容分享">‹</button><strong id="proofFormTitle">补全凭证</strong><span></span></div>
+            <p id="proofActivityName" class="proof-activity-name"></p>
+            <div class="proof-form">
+              <div class="resubmit-tip" id="resubmitTip" hidden><b>!</b><div><strong>请补全截图后重新提交</strong><span id="resubmitReason"></span></div></div>
+              <div class="upload-panel"><strong>上传图片（必填）</strong><p id="uploadHint">支持批量上传，最多 9 张；仅支持 JPG、PNG、WEBP 图片。</p>
+                <input id="proofImageInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onchange="addProofImages(this)">
+                <button id="proofUploadButton" type="button" onclick="document.getElementById('proofImageInput').click()">▧ 批量上传图片</button>
+                <div id="proofImages"></div><small id="proofImageCount" aria-live="polite">0 / 9 张</small>
+                <p id="proofUploadError" class="proof-upload-error" role="alert" hidden></p>
+              </div>
+              <div class="proof-tip"><b>提交说明</b><span>提交后进入后台审批；审核驳回时会在首页待办与内容分享列表中同步提醒。</span></div>
+              <button class="mainbtn" id="proofSubmitButton" onclick="submitNewProof()">提交审核</button>
+            </div>
           </section>
           <section class="view" data-view="invite">
             <div class="invite-page-head"><h1>活动邀约</h1><p>选择活动，生成并分享你的专属海报</p></div>
@@ -2036,7 +2064,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           <section class="view" data-view="todos">
             <div class="subhead"><button onclick="showView('home')">‹</button><strong>待办事项</strong><span></span></div>
             <div class="todo-tabs"><button class="on" onclick="todoFilter('pending',this)">待处理 <b>1</b></button><button onclick="todoFilter('processed',this)">已处理 <b>2</b></button></div>
-            <div class="todo-list"><button data-todo-status="pending" onclick="retryProof('PZ-20260918-002')"><i>!</i><div><span>待处理</span><strong>分享凭证审核驳回</strong><small>截图未显示完整分享页面，请补充后重新提交。</small></div><b>›</b></button><button data-todo-status="processed" style="display:none" onclick="openProofDetail('PZ-20260916-003')"><i class="done">✓</i><div><span>已处理</span><strong>分享凭证审核通过</strong><small>TruLaser 5000 新品亮点分享凭证已通过审核。</small></div><b>›</b></button><button data-todo-status="processed" style="display:none" onclick="notify('邀约积分已计入个人账户')"><i class="done">✓</i><div><span>已处理</span><strong>活动邀约积分到账</strong><small>2026 智造开放日邀约积分已计入个人账户。</small></div><b>›</b></button></div>
+            <div class="todo-list"><div id="contentShareTodoRecords"></div><button data-todo-status="processed" style="display:none" onclick="notify('邀约积分已计入个人账户')"><i class="done">✓</i><div><span>已处理</span><strong>活动邀约积分到账</strong><small>2026 智造开放日邀约积分已计入个人账户。</small></div><b>›</b></button></div>
           </section>
           <section class="view" data-view="productDetail">
             <div class="subhead"><button onclick="showView('mall')">‹</button><strong id="productPageTitle">礼品详情</strong><span></span></div>
@@ -2084,11 +2112,11 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
             </div>
             <button class="profile-order-entry" onclick="showView('orders')"><span>我的订单</span><small>查看实物配送与虚拟权益</small><b>›</b></button>
           </section>
-          <section class="view" data-view="requirements"><div class="subhead"><button onclick="showView('profile')">‹</button><strong>需求说明</strong><span></span></div><div class="mobile-requirements"><article><h2>客户需要实现的需求</h2><ol><li>首页右上角提供轻量个人/企业身份切换，企业身份保持既定权限。</li><li>企业积分按预设分类，由运营手动填写描述/型号、积分值并发送。</li><li>积分商城支持实体与虚拟礼品；订单支持全部、待发货、待收货、已完成、已退回状态查询和详情查看。</li><li>专属二维码进入会议报名，报名成功后邀约双方分别获得积分。</li><li>每日向 Jiale.Yang@trumpf.com 发送待发货实体礼品提醒。</li><li>积分明细增加积分规则说明。</li><li>实体礼品兑换支持选择、新增与维护收货地址。</li><li>保留分享凭证审批、海报、负责人审核与小程序配置等既有交互。</li></ol></article><article class="mobile-font"><h2>字体规范</h2><strong>思源黑体</strong><span>Source Han Sans SC / Noto Sans SC</span></article><article><h2>颜色规范</h2><div class="mobile-palette"><div><i style="background:#0066FF"></i>通快蓝 #0066FF</div><div><i style="background:#20252D"></i>深灰 #20252D</div><div><i style="background:#FFFFFF"></i>白色 #FFFFFF</div></div></article></div></section>
+          <section class="view" data-view="requirements"><div class="subhead"><button onclick="showView('profile')">‹</button><strong>需求说明</strong><span></span></div><div class="mobile-requirements"><article><h2>客户需要实现的需求</h2><ol><li>首页右上角提供轻量个人/企业身份切换，企业身份保持既定权限。</li><li>企业积分按预设分类，由运营手动填写描述/型号、积分值并发送。</li><li>积分商城支持实体与虚拟礼品；订单支持全部、待发货、待收货、已完成、已退回状态查询和详情查看。</li><li>专属二维码进入会议报名，报名成功后邀约双方分别获得积分。</li><li>每日向 Jiale.Yang@trumpf.com 发送待发货实体礼品提醒。</li><li>积分明细增加积分规则说明。</li><li>实体礼品兑换支持选择、新增与维护收货地址。</li><li>保留内容分享与凭证审批、海报、负责人审核与小程序配置等既有交互。</li></ol></article><article class="mobile-font"><h2>字体规范</h2><strong>思源黑体</strong><span>Source Han Sans SC / Noto Sans SC</span></article><article><h2>颜色规范</h2><div class="mobile-palette"><div><i style="background:#0066FF"></i>通快蓝 #0066FF</div><div><i style="background:#20252D"></i>深灰 #20252D</div><div><i style="background:#FFFFFF"></i>白色 #FFFFFF</div></div></article></div></section>
         </div>
         <nav class="bottom" id="bottom" style="display:grid">
           <button class="on" data-nav="home"><i><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H4z"/><path d="M9 20v-6h6v6"/></svg></i>首页</button
-          ><button data-nav="tasks"><i><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m7 15 3-3 2 2 3-4 2 3"/><circle cx="9" cy="8" r="1"/></svg></i>分享凭证</button
+          ><button data-nav="tasks"><i><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m7 15 3-3 2 2 3-4 2 3"/><circle cx="9" cy="8" r="1"/></svg></i>内容分享</button
           ><button data-nav="mall"><i><svg viewBox="0 0 24 24"><path d="M5 8h14l1 12H4z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></i>积分商城</button
           ><button data-nav="profile"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></i>我的</button>
         </nav>
@@ -2131,8 +2159,8 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
                 <div class="config-row"><b>02</b><div><strong>每场活动都有专属海报</strong><span>链接 /pages/invite · 排序 2</span></div><button class="mini-switch on" onclick="toggleAdminSwitch(this,'banner')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑轮播图','banner')">编辑</button></div>
                 <div class="config-row"><b>03</b><div><strong>积分兑换电子权益</strong><span>链接 /pages/mall · 排序 3</span></div><button class="mini-switch on" onclick="toggleAdminSwitch(this,'banner')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑轮播图','banner')">编辑</button></div>
               </div>
-              <div class="app-config-card"><header><div><strong>首页快捷入口</strong><span>固定展示 3 个入口，可编辑名称与跳转页面</span></div></header><div class="config-entries"><button onclick="openAdminForm('编辑快捷入口：分享凭证','nav')"><strong>分享凭证</strong><small>上传与查询记录</small><em>编辑</em></button><button onclick="openAdminForm('编辑快捷入口：活动邀约','nav')"><strong>活动邀约</strong><small>活动海报与二维码</small><em>编辑</em></button><button onclick="openAdminForm('编辑快捷入口：积分商城','nav')"><strong>积分商城</strong><small>电子礼品兑换</small><em>编辑</em></button></div></div>
-              <div class="app-config-card"><header><div><strong>底部导航</strong><span id="navEnabledCount">4 / 4 个启用 · 支持编辑、排序与启停</span></div><button onclick="openNewNavigation()">＋ 新增导航</button></header><div class="config-nav-list"><div><b>01</b><strong>⌂　首页</strong><span>/pages/home</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：首页','nav')">编辑</button></div><div><b>02</b><strong>▧　分享凭证</strong><span>/pages/proofs</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：分享凭证','nav')">编辑</button></div><div><b>03</b><strong>□　积分商城</strong><span>/pages/mall</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：积分商城','nav')">编辑</button></div><div><b>04</b><strong>♙　我的</strong><span>/pages/profile</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：我的','nav')">编辑</button></div></div></div>
+              <div class="app-config-card"><header><div><strong>首页快捷入口</strong><span>固定展示 3 个入口，可编辑名称与跳转页面</span></div></header><div class="config-entries"><button onclick="openAdminForm('编辑快捷入口：内容分享','nav')"><strong>内容分享</strong><small>上传与查询记录</small><em>编辑</em></button><button onclick="openAdminForm('编辑快捷入口：活动邀约','nav')"><strong>活动邀约</strong><small>活动海报与二维码</small><em>编辑</em></button><button onclick="openAdminForm('编辑快捷入口：积分商城','nav')"><strong>积分商城</strong><small>电子礼品兑换</small><em>编辑</em></button></div></div>
+              <div class="app-config-card"><header><div><strong>底部导航</strong><span id="navEnabledCount">4 / 4 个启用 · 支持编辑、排序与启停</span></div><button onclick="openNewNavigation()">＋ 新增导航</button></header><div class="config-nav-list"><div><b>01</b><strong>⌂　首页</strong><span>/pages/home</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：首页','nav')">编辑</button></div><div><b>02</b><strong>▧　内容分享</strong><span>/pages/proofs</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：内容分享','nav')">编辑</button></div><div><b>03</b><strong>□　积分商城</strong><span>/pages/mall</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：积分商城','nav')">编辑</button></div><div><b>04</b><strong>♙　我的</strong><span>/pages/profile</span><button class="mini-switch on" onclick="toggleAdminSwitch(this,'nav')"><i></i></button><em class="enabled">已启用</em><button onclick="openAdminForm('编辑导航：我的','nav')">编辑</button></div></div></div>
             </section>
             <section class="asection admin-v2 share-activities" data-section="review">
   <div id="shareActivityList">
@@ -2202,7 +2230,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
               <article class="requirement-card"><h2>客户需要实现的需求</h2><ol><li>小程序首页右上角提供轻量个人/企业身份切换；企业身份仍按既定权限仅使用积分商城和“我的”。</li><li>企业积分分类预先配置，运营人员按实际业务手动填写分类、描述/型号、积分值并发送。</li><li>积分商城同时支持实体礼品和虚拟礼品；订单支持全部、待发货、待收货、已完成、已退回状态筛选及详情查看。</li><li>被邀约人扫描邀约人专属二维码进入会议报名页；报名成功后分别向邀约人和被邀约人发放积分。</li><li>后台每日汇总待发货实体礼品订单，并向 Jiale.Yang@trumpf.com 发送发货提醒。</li><li>个人积分明细提供独立的积分规则说明，解释获取、使用与有效期规则。</li><li>兑换实体礼品时支持选择、新增和维护收货地址，确认地址后才可提交兑换。</li><li>保留分享凭证上传与审批、活动海报、企业负责人审核、小程序配置等既有完整交互。</li></ol></article>
               <div class="requirement-grid"><article class="requirement-card"><h2>字体规范</h2><div class="font-card"><strong>思源黑体</strong><span>Source Han Sans SC / Noto Sans SC</span><p>用于小程序与运营后台的标题、正文、按钮和数据展示。</p></div></article><article class="requirement-card"><h2>颜色规范</h2><div class="palette"><div><i style="background:#0066FF"></i>通快蓝 #0066FF</div><div><i style="background:#20252D"></i>深灰 #20252D</div><div><i style="background:#FFFFFF"></i>白色 #FFFFFF</div></div></article></div>
             </section>
-            <section class="asection" data-section="appConfig"><div class="atitle"><div><small>小程序页面管理</small><h1>小程序配置</h1><p>配置首页内容与底部导航，右侧同步展示实际效果。</p></div><button class="primary" onclick="notify('小程序配置已保存')">保存配置</button></div><div class="app-config-card"><header><div><strong>首页轮播图</strong><span>最多同时开启 3 个 · 建议 750 × 340 图片</span></div><button disabled title="当前已启用 3 个">＋ 新增轮播图</button></header><div class="config-row"><b>01</b><div><strong>分享成果，沉淀客户价值</strong><span>跳转分享凭证 · 排序 1</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div><div class="config-row"><b>02</b><div><strong>每场活动都有专属海报</strong><span>跳转活动邀约 · 排序 2</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div><div class="config-row"><b>03</b><div><strong>积分兑换电子权益</strong><span>跳转积分商城 · 排序 3</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div></div><div class="app-config-card"><header><div><strong>首页快捷入口</strong><span>固定展示 3 个入口，不支持删除</span></div></header><div class="config-entries"><button onclick="showView('tasks');notify('右侧已切换到分享凭证')"><strong>分享凭证</strong><small>上传与查询记录</small></button><button onclick="showView('invite');notify('右侧已切换到活动邀约')"><strong>专属邀约</strong><small>活动海报与二维码</small></button><button onclick="showView('mall');notify('右侧已切换到积分商城')"><strong>积分商城</strong><small>虚拟电子券兑换</small></button></div></div><div class="app-config-card"><header><div><strong>底部导航</strong><span>支持新增、编辑并控制启用状态</span></div><button onclick="notify('已打开新增底部导航窗口')">＋ 新增导航</button></header><div class="config-nav-list"><div><b>01</b><strong>⌂　首页</strong><span>/pages/home</span><em>已启用</em><button onclick="notify('已打开首页导航编辑')">编辑</button></div><div><b>02</b><strong>▧　分享凭证</strong><span>/pages/proofs</span><em>已启用</em><button onclick="notify('已打开分享凭证导航编辑')">编辑</button></div><div><b>03</b><strong>□　积分商城</strong><span>/pages/mall</span><em>已启用</em><button onclick="notify('已打开积分商城导航编辑')">编辑</button></div><div><b>04</b><strong>♙　我的</strong><span>/pages/profile</span><em>已启用</em><button onclick="notify('已打开我的导航编辑')">编辑</button></div></div></div></section>
+            <section class="asection" data-section="appConfig"><div class="atitle"><div><small>小程序页面管理</small><h1>小程序配置</h1><p>配置首页内容与底部导航，右侧同步展示实际效果。</p></div><button class="primary" onclick="notify('小程序配置已保存')">保存配置</button></div><div class="app-config-card"><header><div><strong>首页轮播图</strong><span>最多同时开启 3 个 · 建议 750 × 340 图片</span></div><button disabled title="当前已启用 3 个">＋ 新增轮播图</button></header><div class="config-row"><b>01</b><div><strong>分享成果，沉淀客户价值</strong><span>跳转内容分享 · 排序 1</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div><div class="config-row"><b>02</b><div><strong>每场活动都有专属海报</strong><span>跳转活动邀约 · 排序 2</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div><div class="config-row"><b>03</b><div><strong>积分兑换电子权益</strong><span>跳转积分商城 · 排序 3</span></div><em>已启用</em><button onclick="notify('已打开轮播图编辑')">编辑</button></div></div><div class="app-config-card"><header><div><strong>首页快捷入口</strong><span>固定展示 3 个入口，不支持删除</span></div></header><div class="config-entries"><button onclick="showView('tasks');notify('右侧已切换到内容分享')"><strong>内容分享</strong><small>上传与查询记录</small></button><button onclick="showView('invite');notify('右侧已切换到活动邀约')"><strong>专属邀约</strong><small>活动海报与二维码</small></button><button onclick="showView('mall');notify('右侧已切换到积分商城')"><strong>积分商城</strong><small>虚拟电子券兑换</small></button></div></div><div class="app-config-card"><header><div><strong>底部导航</strong><span>支持新增、编辑并控制启用状态</span></div><button onclick="notify('已打开新增底部导航窗口')">＋ 新增导航</button></header><div class="config-nav-list"><div><b>01</b><strong>⌂　首页</strong><span>/pages/home</span><em>已启用</em><button onclick="notify('已打开首页导航编辑')">编辑</button></div><div><b>02</b><strong>▧　内容分享</strong><span>/pages/proofs</span><em>已启用</em><button onclick="notify('已打开内容分享导航编辑')">编辑</button></div><div><b>03</b><strong>□　积分商城</strong><span>/pages/mall</span><em>已启用</em><button onclick="notify('已打开积分商城导航编辑')">编辑</button></div><div><b>04</b><strong>♙　我的</strong><span>/pages/profile</span><em>已启用</em><button onclick="notify('已打开我的导航编辑')">编辑</button></div></div></div></section>
             <section class="asection" data-section="review">
               <div class="atitle">
                 <div>
@@ -2431,34 +2459,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
     <div class="image-only" id="imageOnly" onclick="if(event.target===this) closeImageOnly()"><button aria-label="关闭图片预览" onclick="closeImageOnly()">×</button><img loading="lazy" decoding="async" id="imageOnlyContent" alt="图片预览"/></div>
     <script>
       let loginType = "personal",
-        role = "personal",
-        currentTask = "wx-v-001";
-      const tasks = [
-        {
-          id: "wx-v-001",
-          ch: "视频号",
-          cat: "新品发布",
-          title: "TruLaser 5000 新品亮点",
-          pt: 20,
-          status: "approved",
-        },
-        {
-          id: "oa-v-002",
-          ch: "公众号",
-          cat: "客户案例",
-          title: "钣金柔性生产客户案例",
-          pt: 15,
-          status: "rejected",
-        },
-        {
-          id: "wx-v-003",
-          ch: "视频号",
-          cat: "技术课堂",
-          title: "激光切割质量优化技巧",
-          pt: 10,
-          status: "",
-        },
-      ];
+        role = "personal";
       const products = {
         thermos: { icon: "杯", name: "TRUMPF 随行保温杯", points: 1000, kind:"physical", redeemed: "库存 86 件", description: "食品级不锈钢随行保温杯，兑换后由通快运营团队安排快递配送。" },
         backpack: { icon: "包", name: "TRUMPF 商务双肩包", points: 1200, kind:"physical", redeemed: "库存 42 件", description: "轻量商务双肩包，适合日常通勤与客户拜访，兑换后安排快递配送。" },
@@ -2471,7 +2472,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       };
       let currentProduct = products.coffee;
       let currentAddress = {name:"张明远　138****5678", detail:"北京市朝阳区建国路88号SOHO现代城C座1806室"};
-      let proofImages = 0, bannerIndex = 0, bannerSwipeStart = null, editingProofId = null, pointLedgerFilter = "all";
+      let bannerIndex = 0, bannerSwipeStart = null, pointLedgerFilter = "all";
       const personalPointRows = [
         { kind:"available", title:"内容分享审核通过", time:"2026-09-18 10:30", value:"+20" },
         { kind:"available", title:"活动邀约注册成功", time:"2026-09-18 08:00", value:"+50" },
@@ -2483,11 +2484,6 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         { kind:"available", title:"TruLaser 5000 购机积分", time:"2026-08-30 14:20", value:"+500,000" },
         { kind:"available", title:"TruBend 5000 购机积分", time:"2026-06-12 09:45", value:"+100,000" },
         { kind:"consumed", title:"积分商城权益兑换", time:"2026-09-18 16:20", value:"-100,000" },
-      ];
-      const proofRecords = [
-        { id:"PZ-20260920-001", title:"TruLaser 5000 新品亮点朋友圈分享", shareChannel:"微信朋友圈", contentSource:"视频号", images:3, time:"2026-09-20 10:26", status:"pending" },
-        { id:"PZ-20260918-002", title:"钣金柔性生产客户案例分享", shareChannel:"微信好友", contentSource:"公众号", images:2, time:"2026-09-18 16:40", status:"rejected", reason:"截图未显示完整分享页面，请补充完整截图后重新提交。" },
-        { id:"PZ-20260916-003", title:"激光切割质量优化技巧分享", shareChannel:"微信朋友圈", contentSource:"视频号", images:1, time:"2026-09-16 09:15", status:"approved" },
       ];
       let reviews = [
         { id: "PZ-20260920-001", u: "王海峰", phone:"138****3156", ch: "视频号", cat:"新品发布", share:"微信朋友圈", link:"https://channels.weixin.qq.com/trulaser5000", c: "TruLaser 5000 新品亮点朋友圈分享", time:"2026-09-20 10:26", images:3, s: "pending" },
@@ -2507,6 +2503,17 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           link: review.ch === '公众号' ? review.link : '', videoId: review.ch === '视频号' ? 'sphDemo' + String(index + 1).padStart(4, '0') : '',
           channel: review.share, start: '2026-09-01', end: '2026-12-31', enabled: true, updatedBy: '杨佳乐', updatedAt: review.time };
       });
+      const contentShareUser = {id:'MEMBER-6028',name:'钱辰',phone:'138****6028'};
+      let proofImages = [], completingActivityId = null, proofUploadBusy = false, proofDraftVersion = 0;
+      let contentShareFilter = 'all', contentTodoFilter = 'pending';
+      // Use the same submissions in the customer list and the operator's review queue.
+      reviews.forEach(review=>{
+        if (['PZ-20260920-001','PZ-20260918-002','PZ-20260916-003'].includes(review.id)) {
+          Object.assign(review,{userId:contentShareUser.id,u:contentShareUser.name,phone:contentShareUser.phone});
+        }
+        if (review.id==='PZ-20260918-002') {review.s='rejected';review.reason='截图未显示完整分享页面，请补充完整截图后重新提交。'}
+      });
+      shareActivities.find(activity=>activity.id==='SHARE-005').end='2026-10-31';
       function getActivityReviews() {
         return reviews.filter(review => review.activityId === activeProofActivityId);
       }
@@ -2522,7 +2529,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       }
       function stampShareActivity(activity) {
         const now = new Date();
-        activity.updatedAt = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+        activity.updatedAt = new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(now);
         activity.updatedBy = document.querySelector('.ahead strong').textContent.trim();
       }
       function toggleShareActivity(id, enabled) {
@@ -2559,6 +2566,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           '<tr data-share-activity="' + activity.id + '"><td><strong>' + escapeShareText(activity.name) + '</strong></td><td>' + escapeShareText(activity.source) + '</td><td>' + shareActivityLink(activity) + '</td><td>' + escapeShareText(activity.channel) + '</td><td>' + activity.start + ' 至 ' + activity.end + '</td><td>' + escapeShareText(activity.updatedBy) + '</td><td>' + activity.updatedAt + '</td><td>' + shareActivityStatus(activity, true) + '</td><td><div class="share-row-actions"><button onclick="openShareActivityDetail(\'' + activity.id + '\')">详情</button><button ' + (activity.enabled ? 'disabled title="请先关闭活动后再编辑" ' : '') + 'onclick="openShareActivityEditor(\'' + activity.id + '\')">编辑</button><button class="primary" onclick="openShareActivityReviews(\'' + activity.id + '\')">审核</button></div></td></tr>'
         ).join('') || '<tr><td colspan="9" class="share-empty">未找到匹配的活动，请调整活动名称或新建活动。</td></tr>';
         document.getElementById('shareActivityCount').textContent = '共 ' + activities.length + ' 条活动';
+        renderProofRecords();
       }
       function openShareActivityEditor(id) {
         const activity = id ? shareActivities.find(item => item.id === id) : null;
@@ -2703,6 +2711,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         notify(role === "company" ? "企业负责人激活并绑定成功" : "个人会员登录成功");
       }
       function showView(v) {
+        if (v !== "newProof" && completingActivityId) clearProofDraft();
         document
           .querySelectorAll(".view")
           .forEach((x) => x.classList.toggle("on", x.dataset.view === v));
@@ -2715,6 +2724,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         document.getElementById("homeRoleToggle").style.display = v === "home" ? "flex" : "none";
         document.getElementById("mobile").classList.toggle("rules-mode", v === "pointsRules");
         if (v === "tasks") renderProofRecords("all");
+        if (v === "home" || v === "todos") renderContentShareTodos();
       }
       function switchHomeRole(){const next=role==='personal'?'company':'personal';setRole(next);showView('home');notify(next==='company'?'已切换为企业身份':'已切换为个人身份')}
       function setRole(r) {
@@ -2789,20 +2799,144 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       function startBannerSwipe(event){bannerSwipeStart=event.clientX}
       function finishBannerSwipe(event){if(bannerSwipeStart===null)return;const distance=event.clientX-bannerSwipeStart;if(Math.abs(distance)>35)nextBanner(distance<0?1:-1);bannerSwipeStart=null}
       function cancelBannerSwipe(){bannerSwipeStart=null}
-      function proofFilter(status, button){document.querySelectorAll('.proof-tabs button').forEach(x=>x.classList.toggle('on',x===button));renderProofRecords(status)}
-      function renderProofRecords(status){const list=status==='all'?proofRecords:proofRecords.filter(item=>item.status===status);document.getElementById('taskArea').innerHTML=list.map(item=>'<article class="proof-record"><header><div class="proof-tags"><span>'+item.contentSource+'</span><span>'+item.shareChannel+'</span></div>'+statusText(item.status)+'</header><h3>'+item.title+'</h3><p>▧ '+item.images+' 张附件　·　'+item.time+'</p>'+(item.reason?'<p class="reason">'+item.reason+'</p>':'')+'<footer><div>'+(item.status==='rejected'?'<button class="primary" onclick="retryProof(\''+item.id+'\')">重新提交</button>':'<button onclick="openProofDetail(\''+item.id+'\')">查看详情</button>')+'</div></footer></article>').join('')}
-      function openProofDetail(id){const item=proofRecords.find(x=>x.id===id);if(!item)return;const attachments=Array.from({length:item.images},(_,i)=>'<div class="proof-attachment">▧<span>分享截图 '+(i+1)+'</span></div>').join('');openSheet('proofDetail','分享凭证详情',item.title,'<div class="proof-detail-status">'+statusText(item.status)+'<small>'+item.id+'</small></div><div class="proof-detail-grid"><div><span>提交时间</span><strong>'+item.time+'</strong></div><div><span>分享渠道</span><strong>'+item.shareChannel+'</strong></div><div><span>内容来源</span><strong>'+item.contentSource+'</strong></div><div><span>附件数量</span><strong>'+item.images+' 张</strong></div></div><div class="proof-attachments"><strong>截图附件</strong><div>'+attachments+'</div></div>'+(item.reason?'<div class="proof-reject"><strong>驳回原因</strong><span>'+item.reason+'</span></div>':'')+(item.status==='rejected'?'<button class="mainbtn" onclick="closeSheet();showView(\'newProof\')">重新提交凭证</button>':''))}
+      function contentShareToday() {
+        return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+      }
+      function ownActivityProof(activityId) {
+        return reviews.find(item => item.activityId === activityId && item.userId === contentShareUser.id);
+      }
+      function contentShareState(activity) {
+        const proof = ownActivityProof(activity.id);
+        if (proof && ['pending','approved'].includes(proof.s)) return proof.s;
+        if (activity.end < contentShareToday()) return 'expired';
+        return proof ? proof.s : 'todo';
+      }
+      function canCompleteProof(activity) {
+        return activity && activity.enabled && activity.start <= contentShareToday() && ['todo','rejected'].includes(contentShareState(activity));
+      }
+      function contentShareBadge(state) {
+        const labels = {todo:'待补全',pending:'审核中',approved:'审核通过',rejected:'审核驳回',expired:'已过期'};
+        return '<span class="status ' + (state === 'approved' ? 'ok' : ['todo','pending'].includes(state) ? 'wait' : 'bad') + '">' + labels[state] + '</span>';
+      }
+      function getProofAttachments(proof) {
+        if (!proof) return [];
+        return proof.attachments || Array.from({length:proof.images},(_,index)=>({name:'分享截图 '+(index+1),src:'assets/proof-reference.png'}));
+      }
+      function proofFilter(status) { renderProofRecords(status); }
+      function renderProofRecords(status = contentShareFilter) {
+        contentShareFilter = status;
+        document.querySelectorAll('.proof-tabs [data-proof-filter]').forEach(button=>button.classList.toggle('on',button.dataset.proofFilter===status));
+        const activities = shareActivities.filter(activity=>activity.enabled && activity.start<=contentShareToday() && (status==='all'||contentShareState(activity)===status));
+        document.getElementById('taskArea').innerHTML = activities.map(activity=>{
+          const proof=ownActivityProof(activity.id), state=contentShareState(activity), enabled=canCompleteProof(activity);
+          return '<article class="proof-record" data-content-activity="'+activity.id+'" data-content-status="'+state+'"><header><div class="proof-tags"><span>'+escapeShareText(activity.source)+'</span><span>'+escapeShareText(activity.channel)+'</span></div>'+contentShareBadge(state)+'</header><h3>'+escapeShareText(activity.name)+'</h3><p>活动周期：'+activity.start+' 至 '+activity.end+'</p>'+(proof?'<p>▧ '+proof.images+' 张附件 · '+escapeShareText(proof.time)+'</p>':'<p>分享活动内容后，上传截图补全凭证。</p>')+(state==='expired'?'<p class="reason">活动已结束，无法补全凭证。</p>':state==='rejected'?'<p class="reason">'+escapeShareText(proof.reason)+'</p>':'')+'<footer><div><button onclick="openProofDetail(\''+activity.id+'\')">查看详情</button><button class="primary" '+(enabled?'':'disabled title="'+(state==='expired'?'活动已过期':'已提交凭证，无需重复补全')+'"')+' onclick="completeActivityProof(\''+activity.id+'\')">补全凭证</button></div></footer></article>';
+        }).join('') || '<div class="content-share-empty">暂无'+(status==='all'?'可参与的活动':'该状态的活动')+'</div>';
+        renderContentShareTodos();
+      }
+      function openProofDetail(id) {
+        const activity=shareActivities.find(item=>item.id===id || item.id===reviews.find(review=>review.id===id&&review.userId===contentShareUser.id)?.activityId);
+        if (!activity || !activity.enabled) {notify('该活动已关闭');return}
+        const proof=ownActivityProof(activity.id), attachments=getProofAttachments(proof);
+        const fields=[['内容来源',escapeShareText(activity.source)],['分享渠道',escapeShareText(activity.channel)],['活动周期',activity.start+' 至 '+activity.end],[activity.source==='视频号'?'视频号ID':'活动链接',shareActivityLink(activity)]];
+        if (proof) fields.push(['提交时间',escapeShareText(proof.time)],['附件数量',proof.images+' 张']);
+        openSheet('proofDetail','内容分享详情',activity.name,
+          '<div class="proof-detail-status">'+contentShareBadge(contentShareState(activity))+'</div><dl class="content-share-details">'+fields.map(([label,value])=>'<div><dt>'+label+'</dt><dd>'+value+'</dd></div>').join('')+'</dl>'+(attachments.length?'<div class="proof-attachments"><strong>截图附件</strong><div>'+attachments.map((image,index)=>'<button class="proof-attachment" onclick="previewContentProof(\''+activity.id+'\','+index+')"><img src="'+escapeShareText(image.src)+'" alt="'+escapeShareText(image.name)+'"></button>').join('')+'</div></div>':'')+(proof&&proof.reason?'<div class="proof-reject"><strong>驳回原因</strong><span>'+escapeShareText(proof.reason)+'</span></div>':'')+(canCompleteProof(activity)?'<button class="mainbtn" onclick="closeSheet();completeActivityProof(\''+activity.id+'\')">补全凭证</button>':''));
+      }
+      function previewContentProof(activityId,index) {
+        const attachment=getProofAttachments(ownActivityProof(activityId))[index];
+        if (attachment) openImageOnly(attachment.src);
+      }
+      function renderContentShareTodos() {
+        const pending=shareActivities.filter(activity=>canCompleteProof(activity)&&contentShareState(activity)==='rejected');
+        document.getElementById('contentShareTodoHome').innerHTML=pending.map(activity=>'<button class="task reject-task" onclick="completeActivityProof(\''+activity.id+'\')"><b>!</b><div><span>内容分享审核驳回</span><strong>'+escapeShareText(activity.name)+'</strong><small>'+escapeShareText(ownActivityProof(activity.id).reason)+'</small></div><b>›</b></button>').join('') || '<p class="content-share-empty">暂无待处理的内容分享</p>';
+        const approved=shareActivities.filter(activity=>activity.enabled&&ownActivityProof(activity.id)?.s==='approved');
+        document.getElementById('contentShareTodoRecords').innerHTML=[...pending,...approved].map(activity=>{
+          const rejected=contentShareState(activity)==='rejected', state=rejected?'pending':'processed';
+          return '<button data-todo-status="'+state+'" style="display:'+(state===contentTodoFilter?'grid':'none')+'" onclick="'+(rejected?'completeActivityProof':'openProofDetail')+'(\''+activity.id+'\')"><i>'+ (rejected?'!':'✓')+'</i><div><span>'+(rejected?'待处理':'已处理')+'</span><strong>内容分享'+(rejected?'审核驳回':'审核通过')+'</strong><small>'+escapeShareText(activity.name)+'</small></div><b>›</b></button>';
+        }).join('');
+      }
+      function clearProofDraft() {
+        proofDraftVersion++;
+        completingActivityId=null;
+        proofImages=[];
+        proofUploadBusy=false;
+      }
+      function completeActivityProof(activityId) {
+        const activity=shareActivities.find(item=>item.id===activityId);
+        if (!canCompleteProof(activity)) {notify('该活动当前无法补全凭证');renderProofRecords();return}
+        clearProofDraft();
+        completingActivityId=activityId;
+        const proof=ownActivityProof(activityId);
+        proofImages=getProofAttachments(proof).map(image=>({...image}));
+        document.getElementById('proofActivityName').textContent=activity.name;
+        document.getElementById('resubmitTip').hidden=!proof;
+        document.getElementById('resubmitReason').textContent=proof?.reason||'';
+        document.getElementById('proofImageInput').value='';
+        document.getElementById('proofUploadError').hidden=true;
+        renderProofImages();
+        showView('newProof');
+      }
+      function renderProofImages() {
+        document.getElementById('proofImages').innerHTML=proofImages.map((image,index)=>'<div class="proof-image-item"><button class="proof-image-preview" onclick="openImageOnly(proofImages['+index+'].src)"><img src="'+escapeShareText(image.src)+'" alt="'+escapeShareText(image.name)+'"></button><button class="proof-image-remove" aria-label="删除图片 '+(index+1)+'" onclick="removeProofImage('+index+')">×</button></div>').join('');
+        document.getElementById('proofImageCount').textContent=proofImages.length+' / 9 张';
+        document.getElementById('proofUploadButton').disabled=proofUploadBusy||proofImages.length>=9;
+        document.getElementById('proofSubmitButton').disabled=proofUploadBusy;
+        document.getElementById('proofSubmitButton').textContent=proofUploadBusy?'图片处理中…':'提交审核';
+      }
+      function removeProofImage(index) {
+        if (proofUploadBusy) return;
+        proofImages.splice(index,1);
+        renderProofImages();
+      }
+      function proofUploadError(message) {
+        const error=document.getElementById('proofUploadError');
+        error.textContent=message;error.hidden=false;notify(message);
+      }
+      function readProofImage(file) {
+        return new Promise((resolve,reject)=>{
+          const reader=new FileReader();
+          reader.onerror=()=>reject(new Error('图片读取失败，请重新选择'));
+          reader.onload=()=>{
+            const image=new Image();
+            image.onload=()=>resolve({name:file.name,src:reader.result});
+            image.onerror=()=>reject(new Error('图片无法读取，请上传有效的 JPG、PNG、WEBP 图片'));
+            image.src=reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      async function addProofImages(input) {
+        const files=[...input.files];input.value='';
+        if (!files.length||proofUploadBusy||!completingActivityId) return;
+        if (files.length+proofImages.length>9) {proofUploadError('最多上传 9 张图片，请减少选择数量');return}
+        if (files.some(file=>!['image/jpeg','image/png','image/webp'].includes(file.type))) {proofUploadError('仅支持 JPG、PNG、WEBP 图片');return}
+        const version=proofDraftVersion;
+        proofUploadBusy=true;renderProofImages();
+        document.getElementById('proofUploadError').hidden=true;
+        try {
+          const images=await Promise.all(files.map(readProofImage));
+          if (version===proofDraftVersion) proofImages.push(...images);
+        } catch(error) { if (version===proofDraftVersion) proofUploadError(error.message); }
+        finally { if (version===proofDraftVersion) {proofUploadBusy=false;renderProofImages()} }
+      }
+      function submitNewProof() {
+        const activity=shareActivities.find(item=>item.id===completingActivityId);
+        if (!canCompleteProof(activity)) {proofUploadError('活动已关闭、未开始、已过期或已提交，无法补全凭证');return}
+        if (proofUploadBusy) {proofUploadError('请等待图片处理完成');return}
+        if (!proofImages.length) {proofUploadError('请至少上传 1 张图片');return}
+        const existing=ownActivityProof(activity.id);
+        const record={id:existing?.id||'PZ-'+Date.now()+'-'+reviews.length,activityId:activity.id,userId:contentShareUser.id,u:contentShareUser.name,phone:contentShareUser.phone,ch:activity.source,cat:'内容分享',share:activity.channel,link:activity.link,c:activity.name,images:proofImages.length,attachments:proofImages.map(image=>({...image})),s:'pending',reason:''};
+        const stamp={};stampShareActivity(stamp);record.time=stamp.updatedAt;
+        if (existing) Object.assign(existing,record);else reviews.unshift(record);
+        renderReviewsV2();
+        showView('tasks');
+        notify('凭证已提交，等待后台审核');
+      }
       function renderPointLedger(kind){const rows=role==='company'?companyPointRows:personalPointRows;const visible=kind==='all'?rows:rows.filter(row=>row.kind===kind);document.getElementById('pointLedger').innerHTML=visible.map(row=>'<div class="ledgerrow"><div><strong>'+row.title+'</strong><span>'+row.time+'</span></div><'+(row.value.startsWith('+')?'b':'span')+'>'+row.value+'</'+(row.value.startsWith('+')?'b':'span')+'></div>').join('')}
       function pointFilter(kind,button){pointLedgerFilter=kind;document.querySelectorAll('.ptabs button').forEach(x=>x.classList.toggle('on',x===button));renderPointLedger(kind)}
       function openPointsDetail(kind){pointLedgerFilter=kind;const button=document.querySelector('[data-point-filter="'+kind+'"]');document.querySelectorAll('.ptabs button').forEach(x=>x.classList.toggle('on',x===button));renderPointLedger(kind);showView('pointsDetail')}
       function openRolePoints(){openPointsDetail(role==='company'?'all':'available')}
-      function todoFilter(kind,button){document.querySelectorAll('.todo-tabs button').forEach(x=>x.classList.toggle('on',x===button));document.querySelectorAll('[data-todo-status]').forEach(row=>row.style.display=row.dataset.todoStatus===kind?'grid':'none')}
-      function updateCount(){document.getElementById('titleCount').textContent=document.getElementById('proofTitle').value.length+' / 255'}
-      function renderProofImages(isOriginal){document.getElementById('proofImages').innerHTML=Array.from({length:proofImages},(_,i)=>'<span>'+(isOriginal?'原截图 ':'截图 ')+(i+1)+'</span>').join('')}
-      function startNewProof(){editingProofId=null;proofImages=0;document.getElementById('proofFormTitle').textContent='新增分享凭证';document.getElementById('resubmitTip').style.display='none';document.getElementById('proofTitle').value='';document.getElementById('proofShareChannel').value='微信朋友圈';document.getElementById('proofContentSource').value='视频号';document.getElementById('uploadHint').textContent='支持批量上传，最多 9 张；仅支持 JPG、PNG、WEBP 图片。';document.getElementById('proofSubmitHint').textContent='提交后进入后台审批；审核驳回时会在首页待办与记录列表中同步提醒。';document.getElementById('proofSubmitButton').textContent='提交审核';renderProofImages(false);updateCount();showView('newProof')}
-      function retryProof(id){const item=proofRecords.find(x=>x.id===id);if(!item)return;editingProofId=id;proofImages=item.images;document.getElementById('proofFormTitle').textContent='重新提交凭证';document.getElementById('resubmitTip').style.display='flex';document.getElementById('resubmitReason').textContent=item.reason||'请修正凭证后重新提交。';document.getElementById('proofTitle').value=item.title;document.getElementById('proofShareChannel').value=item.shareChannel;document.getElementById('proofContentSource').value=item.contentSource;document.getElementById('uploadHint').textContent='已回显原附件，可重新选择图片；最多 9 张。';document.getElementById('proofSubmitHint').textContent='重新提交后将进入审批中，原驳回状态同步更新。';document.getElementById('proofSubmitButton').textContent='重新提交审核';renderProofImages(true);updateCount();showView('newProof')}
-      function addProofImages(){proofImages=Math.min(proofImages+3,9);renderProofImages(false);notify('已选择 3 张图片（Demo）')}
-      function submitNewProof(){const title=document.getElementById('proofTitle').value.trim();const shareChannel=document.getElementById('proofShareChannel').value;const contentSource=document.getElementById('proofContentSource').value;if(!title){notify('请填写分享链接名称');return}if(!proofImages){notify('请至少上传 1 张图片');return}const record={id:editingProofId||'PZ-'+Date.now().toString().slice(-8),title,shareChannel,contentSource,images:proofImages,time:'刚刚',status:'pending'};const index=proofRecords.findIndex(x=>x.id===record.id);if(index>=0)proofRecords[index]=record;else proofRecords.unshift(record);const retried=Boolean(editingProofId);editingProofId=null;showView('tasks');notify(retried?'凭证已重新提交，等待后台审批':'分享凭证已提交，等待后台审批')}
+      function todoFilter(kind,button){contentTodoFilter=kind;document.querySelectorAll('.todo-tabs button').forEach(x=>x.classList.toggle('on',x===button));document.querySelectorAll('[data-todo-status]').forEach(row=>row.style.display=row.dataset.todoStatus===kind?'grid':'none')}
       function openEditInfo(){const company=role==='company';openSheet(company?'editCompany':'editProfile')}
       function openProduct(id) {
         currentProduct = products[id];
@@ -2857,10 +2991,6 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       }
       function openInviteRegister(eventName,inviter){document.getElementById('registerEvent').textContent=eventName;document.getElementById('inviterName').textContent=inviter;showView('inviteRegister')}
       function submitInviteRegister(){const name=document.getElementById('registerName').value.trim();if(!name){notify('请填写报名人姓名');return}document.querySelector('[data-view="inviteRegister"] .register-form').innerHTML='<div class="register-success"><b>✓</b><h2>报名成功</h2><p>会议报名已提交，双方积分已发放。</p><div class="reward-pair"><div><span>邀约人 钱辰</span><strong>+50 积分</strong></div><div><span>被邀约人 '+name+'</span><strong>+20 积分</strong></div></div><button class="mainbtn" onclick="showView(\'invite\')">完成</button></div>';notify('报名成功，双方积分已到账')}
-      function taskTab(t, b) {
-        document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x === b));
-        renderTasks(t);
-      }
       function statusText(s) {
         return s === "approved"
           ? '<span class="status ok">审核通过</span>'
@@ -2869,109 +2999,6 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
             : s === "pending"
               ? '<span class="status wait">审批中</span>'
               : "<span>尚未提交</span>";
-      }
-      function renderTasks(type) {
-        const a = document.getElementById("taskArea");
-        if (type === "records") {
-          a.innerHTML =
-            '<div class="cards">' +
-            tasks
-              .filter((t) => t.status)
-              .map(
-                (t) =>
-                  '<article class="record"><div><strong>' +
-                  t.title +
-                  "</strong><span>" +
-                  t.ch +
-                  " · " +
-                  t.cat +
-                  "</span></div>" +
-                  statusText(t.status) +
-                  (t.status === "rejected"
-                    ? '<p>驳回原因：截图未显示完整分享页面，可再次发起上传。</p><button class="retry" onclick="openUpload(\'' +
-                      t.id +
-                      "')\">重新上传凭证</button>"
-                    : "") +
-                  "</article>",
-              )
-              .join("") +
-            "</div>";
-          return;
-        }
-        a.innerHTML =
-          '<div class="cards">' +
-          tasks
-            .map(
-              (t) =>
-                '<article class="card"><div class="cardtop"><em>' +
-                t.ch +
-                "</em><span>" +
-                t.cat +
-                "</span><b>+" +
-                t.pt +
-                "</b></div><h3>" +
-                t.title +
-                '</h3><p>运营推送内容链接 · 审核通过后计分</p><div class="tags"><span>同一链接仅提交一次</span><span>上限 ' +
-                t.pt +
-                " 分</span></div><footer>" +
-                statusText(t.status) +
-                "<button " +
-                (t.status === "approved" || t.status === "pending" ? "disabled" : "") +
-                ' onclick="' +
-                (t.status === "rejected" ? "openUpload" : "openShare") +
-                "('" +
-                t.id +
-                "')\">" +
-                (t.status === "rejected" ? "重新上传" : t.status ? "不可重复提交" : "去分享") +
-                "</button></footer></article>",
-            )
-            .join("") +
-          "</div>";
-      }
-      function openShare(id) {
-        currentTask = id;
-        const t = tasks.find((x) => x.id === id);
-        openSheet(
-          "share",
-          "运营推送内容",
-          t.title,
-          '<div class="preview"><span>' +
-            t.ch +
-            " · " +
-            t.cat +
-            "</span><strong>视频内容链接</strong><small>weixin.qq.com/s/" +
-            t.id +
-            '</small></div><p>请分享给微信好友或朋友圈，完成后将结果截图保存到手机相册。</p><div class="actions"><button onclick="notify(\'已复制内容链接\')">复制链接</button><button onclick="notify(\'已唤起微信分享（Demo）\')">分享至微信</button></div><button class="mainbtn" onclick="openUpload(\'' +
-            id +
-            "')\">我已分享，上传截图</button>",
-        );
-      }
-      function openUpload(id) {
-        currentTask = id;
-        const t = tasks.find((x) => x.id === id),
-          ok = !t.status || t.status === "rejected";
-        openSheet(
-          "upload",
-          "截图凭证",
-          t.status === "rejected" ? "重新上传凭证" : "上传分享凭证",
-          '<div class="dedupe"><b>链接唯一性校验</b><p>' +
-            (ok ? "该链接可提交；审核中或已通过后不可重复上传。" : "该链接已提交，不可重复上传。") +
-            '</p></div><button class="upload" ' +
-            (ok ? "" : "disabled") +
-            ' onclick="notify(\'已从手机相册选择截图\')">从手机相册选择截图</button><button class="mainbtn" ' +
-            (ok ? "" : "disabled") +
-            ' onclick="submitProof()">提交运营审核</button>',
-        );
-      }
-      function submitProof() {
-        const t = tasks.find((x) => x.id === currentTask);
-        if (t.status && t.status !== "rejected") {
-          notify("该链接凭证已提交，不可重复上传");
-          return;
-        }
-        t.status = "pending";
-        closeSheet();
-        notify("凭证已提交，等待运营审核");
       }
       function openPoster(title, pt, cap) {
         openSheet(
@@ -3165,27 +3192,41 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       function openImageOnly(src){document.getElementById('imageOnlyContent').src=src;document.getElementById('imageOnly').classList.add('on')}
       function closeImageOnly(){document.getElementById('imageOnly').classList.remove('on')}
       function renderReviewsV2(){
-        document.getElementById('reviewRowsV2').innerHTML=getActivityReviews().map(r=>'<tr><td><input type="checkbox" data-check-v2="'+r.id+'" '+(r.s==='pending'?'':'disabled')+'></td><td><strong>'+r.u+'</strong><small>'+r.id+'</small></td><td>'+r.ch+'<small>'+r.cat+'</small></td><td>'+r.c+'</td><td>'+r.share+'</td><td><button class="proof-thumb" onclick="openImageOnly(\'assets/proof-reference.png\')"><img loading="lazy" decoding="async" src="assets/proof-reference.png" alt=""><span>'+r.images+' 张</span></button></td><td>'+r.time+'</td><td>'+statusText(r.s)+'</td><td><button onclick="openReviewDetailV2(\''+r.id+'\')">查看详情</button> '+(r.s==='pending'?'<button onclick="reviewOneV2(\''+r.id+'\',\'rejected\')">驳回</button> <button class="primary" onclick="reviewOneV2(\''+r.id+'\',\'approved\')">通过</button>':'')+'</td></tr>').join('') || '<tr><td colspan="9" class="share-empty">该活动暂无分享凭证。</td></tr>';
+        document.getElementById('reviewRowsV2').innerHTML=getActivityReviews().map(r=>{
+          const image=getProofAttachments(r)[0];
+          return '<tr><td><input type="checkbox" data-check-v2="'+r.id+'" '+(r.s==='pending'?'':'disabled')+'></td><td><strong>'+escapeShareText(r.u)+'</strong><small>'+r.id+'</small></td><td>'+escapeShareText(r.ch)+'<small>'+escapeShareText(r.cat)+'</small></td><td>'+escapeShareText(r.c)+'</td><td>'+escapeShareText(r.share)+'</td><td>'+(image?'<button class="proof-thumb" onclick="previewReviewImage(\''+r.id+'\',0)"><img loading="lazy" decoding="async" src="'+escapeShareText(image.src)+'" alt="分享截图"><span>'+r.images+' 张</span></button>':'—')+'</td><td>'+escapeShareText(r.time)+'</td><td>'+statusText(r.s)+'</td><td><button onclick="openReviewDetailV2(\''+r.id+'\')">查看详情</button> '+(r.s==='pending'?'<button onclick="reviewOneV2(\''+r.id+'\',\'rejected\')">驳回</button> <button class="primary" onclick="reviewOneV2(\''+r.id+'\',\'approved\')">通过</button>':'')+'</td></tr>';
+        }).join('') || '<tr><td colspan="9" class="share-empty">该活动暂无分享凭证。</td></tr>';
         syncReviewSelectionV2();
       }
       function toggleAllReviewsV2(box){document.querySelectorAll('#reviewRowsV2 [data-check-v2]:not(:disabled)').forEach(item=>item.checked=box.checked);syncReviewSelectionV2()}
+      function setProofReviewStatus(review,status){
+        review.s=status;
+        review.reason=status==='rejected'?'截图未显示完整分享页面，请补充完整截图后重新提交。':'';
+      }
       function reviewOneV2(id,status){
         if(!['approved','rejected'].includes(status))return;
         const review=getActivityReviews().find(item=>item.id===id&&item.s==='pending');
         if(!review)return;
-        review.s=status;renderReviewsV2();notify(status==='approved'?'审核通过，积分已发放':'已驳回并发送用户工单');
+        setProofReviewStatus(review,status);renderReviewsV2();renderProofRecords();
+        notify(status==='approved'?'审核通过，积分已发放':'已驳回并通知用户补全凭证');
       }
       function batchReviewV2(status){
         if(!['approved','rejected'].includes(status))return;
         const ids=[...document.querySelectorAll('#reviewRowsV2 [data-check-v2]:checked:not(:disabled)')].map(item=>item.dataset.checkV2);
         const selected=getActivityReviews().filter(item=>ids.includes(item.id)&&item.s==='pending');
         if(!selected.length){notify('请先选择待审核的凭证');return}
-        selected.forEach(item=>item.s=status);renderReviewsV2();notify('已批量'+(status==='approved'?'通过':'驳回')+' '+selected.length+' 条凭证');
+        selected.forEach(item=>setProofReviewStatus(item,status));renderReviewsV2();renderProofRecords();
+        notify('已批量'+(status==='approved'?'通过':'驳回')+' '+selected.length+' 条凭证');
+      }
+      function previewReviewImage(id,index){
+        const review=getActivityReviews().find(item=>item.id===id);
+        const image=getProofAttachments(review)[index];
+        if(image)openImageOnly(image.src);
       }
       function openReviewDetailV2(id){
         const r=getActivityReviews().find(item=>item.id===id);if(!r)return;
         document.getElementById('reviewDetailTitleV2').textContent=r.c;
-        document.getElementById('reviewDetailContentV2').innerHTML='<div class="review-detail-grid"><div><span>提交用户</span><strong>'+r.u+'</strong><small>'+r.phone+'</small></div><div><span>内容来源</span><strong>'+r.ch+' / '+r.cat+'</strong></div><div><span>分享渠道</span><strong>'+r.share+'</strong></div><div><span>提交时间</span><strong>'+r.time+'</strong></div><div><span>审核状态</span>'+statusText(r.s)+'</div></div><div class="review-attachments"><div><strong>全部附件</strong><span>共 '+r.images+' 张</span></div><section>'+Array.from({length:r.images},(_,index)=>'<button onclick="openImageOnly(\'assets/proof-reference.png\')"><img loading="lazy" decoding="async" src="assets/proof-reference.png" alt=""><span>分享截图 '+(index+1)+'</span></button>').join('')+'</section></div>';
+        document.getElementById('reviewDetailContentV2').innerHTML='<div class="review-detail-grid"><div><span>提交用户</span><strong>'+escapeShareText(r.u)+'</strong><small>'+escapeShareText(r.phone)+'</small></div><div><span>内容来源</span><strong>'+escapeShareText(r.ch)+' / '+escapeShareText(r.cat)+'</strong></div><div><span>分享渠道</span><strong>'+escapeShareText(r.share)+'</strong></div><div><span>提交时间</span><strong>'+escapeShareText(r.time)+'</strong></div><div><span>审核状态</span>'+statusText(r.s)+'</div></div>'+(r.reason?'<p class="reason">'+escapeShareText(r.reason)+'</p>':'')+'<div class="review-attachments"><div><strong>全部附件</strong><span>共 '+r.images+' 张</span></div><section>'+getProofAttachments(r).map((image,index)=>'<button onclick="previewReviewImage(\''+r.id+'\','+index+')"><img loading="lazy" decoding="async" src="'+escapeShareText(image.src)+'" alt="'+escapeShareText(image.name)+'"><span>分享截图 '+(index+1)+'</span></button>').join('')+'</section></div>';
         document.getElementById('reviewDetailActionsV2').innerHTML='<button onclick="closeReviewDetailV2()">关闭</button>'+(r.s==='pending'?'<button onclick="reviewOneV2(\''+r.id+'\',\'rejected\');closeReviewDetailV2()">驳回</button><button class="primary" onclick="reviewOneV2(\''+r.id+'\',\'approved\');closeReviewDetailV2()">审核通过</button>':'');
         document.getElementById('reviewModalV2').classList.add('on');
       }
@@ -3202,7 +3243,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       showView("home");
       setRole("personal");
       renderReviewsV2();
-      renderTasks("available");
+      renderProofRecords();
     </script>
     <style>
       .admin-form-modal.gift-form-modal{width:min(920px,calc(100vw - 40px));max-height:calc(100vh - 32px);overflow:auto}
