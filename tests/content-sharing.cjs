@@ -29,12 +29,40 @@ const {chromium} = require('playwright');
       assert.ok((await cards.evaluateAll(items=>items.map(item=>item.dataset.contentStatus))).every(value=>value===state));
     }
     await page.locator('[data-proof-filter="all"]').click();
+    const activities=await page.evaluate(()=>shareActivities.map(({id,source,link,videoId})=>({id,source,link,videoId})));
+    for (const activity of activities) {
+      const sourceCard=card(activity.id).locator('.content-source-card');
+      assert.equal(await sourceCard.count(),1,'Each task has exactly one source entry');
+      assert.equal(await sourceCard.getAttribute('data-source'),activity.source);
+      assert.doesNotMatch(await card(activity.id).innerText(),/https?:\/\/|sphDemo/);
+      if(activity.source==='公众号') {
+        assert.equal(await sourceCard.getByRole('link',{name:'打开文章',exact:true}).getAttribute('href'),activity.link);
+        assert.equal(await sourceCard.getByRole('button',{name:'打开视频号',exact:true}).count(),0);
+      } else {
+        assert.equal(await sourceCard.getByRole('button',{name:'打开视频号',exact:true}).count(),1);
+        assert.equal(await sourceCard.getByRole('link').count(),0);
+      }
+    }
+    await page.waitForFunction(()=>!document.getElementById('toast').classList.contains('on'));
     await page.locator('#mobile').screenshot({path:path.join(os.tmpdir(),'trumpf-content-sharing.png')});
     await card('SHARE-001').getByRole('button',{name:'查看详情',exact:true}).click();
-    assert.match(await page.locator('#sheetContent').innerText(),/视频号ID/);
+    assert.match(await page.locator('#sheetContent').innerText(),/微信视频号动态/);
+    assert.equal(await page.locator('#sheetContent .content-source-card').count(),1);
+    assert.doesNotMatch(await page.locator('#sheetContent').innerText(),/https?:\/\/|视频号ID|sphDemo|微信公众号文章/);
     assert.match(await page.locator('#sheetContent').innerText(),/审核中/);
+    await page.locator('#mobile').screenshot({path:path.join(os.tmpdir(),'trumpf-video-source-card.png')});
+    await page.locator('#sheetContent').getByRole('button',{name:'打开视频号',exact:true}).click();
+    assert.match(await page.locator('#toast').innerText(),/网页为交互演示/);
     await page.evaluate(()=>closeSheet());
     assert.equal(await card('SHARE-001').getAttribute('data-content-status'),'pending');
+    await card('SHARE-002').getByRole('button',{name:'查看详情',exact:true}).click();
+    assert.equal(await page.locator('#sheetContent .content-source-card').count(),1);
+    assert.match(await page.locator('#sheetContent').innerText(),/微信公众号文章/);
+    assert.doesNotMatch(await page.locator('#sheetContent').innerText(),/https?:\/\/|视频号ID|微信视频号动态/);
+    assert.equal(await page.locator('#sheetContent').getByRole('link',{name:'打开文章',exact:true}).getAttribute('href'),activities.find(a=>a.id==='SHARE-002').link);
+    await page.waitForFunction(()=>!document.getElementById('toast').classList.contains('on'));
+    await page.locator('#mobile').screenshot({path:path.join(os.tmpdir(),'trumpf-article-source-card.png')});
+    await page.evaluate(()=>closeSheet());
     for (const id of ['SHARE-001','SHARE-005','SHARE-007']) assert.ok(await card(id).getByRole('button',{name:'补全凭证',exact:true}).isDisabled());
     await page.evaluate(()=>completeActivityProof('SHARE-005'));
     assert.equal(await page.locator('[data-view="newProof"]').isVisible(),false);
@@ -130,7 +158,8 @@ const {chromium} = require('playwright');
     assert.match(await card(created).innerText(),/前后台联动新活动/);
     assert.equal(await card(created).getAttribute('data-content-status'),'todo');
     await card(created).getByRole('button',{name:'查看详情',exact:true}).click();
-    assert.match(await page.locator('#sheetContent').innerText(),/sphLinkedDemo/);await page.evaluate(()=>closeSheet());
+    assert.match(await page.locator('#sheetContent').innerText(),/微信视频号动态/);
+    assert.doesNotMatch(await page.locator('#sheetContent').innerText(),/sphLinkedDemo/);await page.evaluate(()=>closeSheet());
     await card(created).getByRole('button',{name:'补全凭证',exact:true}).click();await upload([files[1]]);
     await page.evaluate(id=>toggleShareActivity(id,false),created);
     await page.locator('#proofSubmitButton').click();

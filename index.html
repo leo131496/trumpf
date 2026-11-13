@@ -1887,6 +1887,13 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
 .content-share-details{margin:16px 0;font-size:11px;line-height:1.8}
 .content-share-details>div{padding:10px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px}
 .content-share-details dt{color:var(--m)}.content-share-details dd{margin:0;overflow-wrap:anywhere}.content-share-details a{color:var(--b)}
+.content-source-card{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:8px;padding:12px 10px;margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#FFFFFF}
+.content-source-icon{display:grid;place-items:center;width:34px;height:44px;border-radius:7px;background:var(--blue-soft);color:var(--b);font-size:10px;font-weight:600}
+.content-source-card[data-source="视频号"] .content-source-icon{background:rgba(32,37,45,.06);color:var(--n)}
+.content-source-copy{min-width:0}.content-source-copy strong{display:block;font-size:11px;line-height:1.6;font-weight:550}.content-source-copy small{display:block;margin-top:4px;color:var(--m);font-size:9px;line-height:1.5}
+.content-source-open{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:0;border-radius:18px;padding:0 11px;background:var(--b);color:#FFFFFF;text-decoration:none;white-space:nowrap;font:inherit;font-size:10px;cursor:pointer}
+.content-source-card[data-source="视频号"] .content-source-open{background:var(--n)}
+.content-source-open:focus-visible{outline:2px solid var(--b);outline-offset:3px}
 .proof-attachments .proof-attachment{padding:0;overflow:hidden}
 #contentShareTodoHome .task{width:100%}
 </style>
@@ -2823,13 +2830,25 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         return proof.attachments || Array.from({length:proof.images},(_,index)=>({name:'分享截图 '+(index+1),src:'assets/proof-reference.png'}));
       }
       function proofFilter(status) { renderProofRecords(status); }
+      function contentSourceCard(activity) {
+        const article=activity.source==='公众号';
+        const action=article
+          ? '<a class="content-source-open" href="'+escapeShareText(activity.link)+'" target="_blank" rel="noopener noreferrer">打开文章</a>'
+          : '<button class="content-source-open" type="button" onclick="openContentVideo(\''+activity.id+'\')">打开视频号</button>';
+        return '<div class="content-source-card" data-source="'+activity.source+'"><span class="content-source-icon" aria-hidden="true">'+(article?'文章':'视频号')+'</span><div class="content-source-copy"><strong>'+(article?'微信公众号文章':'微信视频号动态')+'</strong><small>'+(article?'阅读文章并完成分享':'查看动态并完成分享')+'</small></div>'+action+'</div>';
+      }
+      function openContentVideo(activityId) {
+        const activity=shareActivities.find(item=>item.id===activityId);
+        if (!activity || !activity.enabled || activity.source!=='视频号') return;
+        notify('请在微信小程序中打开视频号；当前网页为交互演示。');
+      }
       function renderProofRecords(status = contentShareFilter) {
         contentShareFilter = status;
         document.querySelectorAll('.proof-tabs [data-proof-filter]').forEach(button=>button.classList.toggle('on',button.dataset.proofFilter===status));
         const activities = shareActivities.filter(activity=>activity.enabled && activity.start<=contentShareToday() && (status==='all'||contentShareState(activity)===status));
         document.getElementById('taskArea').innerHTML = activities.map(activity=>{
           const proof=ownActivityProof(activity.id), state=contentShareState(activity), enabled=canCompleteProof(activity);
-          return '<article class="proof-record" data-content-activity="'+activity.id+'" data-content-status="'+state+'"><header><div class="proof-tags"><span>'+escapeShareText(activity.source)+'</span><span>'+escapeShareText(activity.channel)+'</span></div>'+contentShareBadge(state)+'</header><h3>'+escapeShareText(activity.name)+'</h3><p>活动周期：'+activity.start+' 至 '+activity.end+'</p>'+(proof?'<p>▧ '+proof.images+' 张附件 · '+escapeShareText(proof.time)+'</p>':'<p>分享活动内容后，上传截图补全凭证。</p>')+(state==='expired'?'<p class="reason">活动已结束，无法补全凭证。</p>':state==='rejected'?'<p class="reason">'+escapeShareText(proof.reason)+'</p>':'')+'<footer><div><button onclick="openProofDetail(\''+activity.id+'\')">查看详情</button><button class="primary" '+(enabled?'':'disabled title="'+(state==='expired'?'活动已过期':'已提交凭证，无需重复补全')+'"')+' onclick="completeActivityProof(\''+activity.id+'\')">补全凭证</button></div></footer></article>';
+          return '<article class="proof-record" data-content-activity="'+activity.id+'" data-content-status="'+state+'"><header><div class="proof-tags"><span>'+escapeShareText(activity.source)+'</span><span>'+escapeShareText(activity.channel)+'</span></div>'+contentShareBadge(state)+'</header><h3>'+escapeShareText(activity.name)+'</h3>'+contentSourceCard(activity)+'<p>活动周期：'+activity.start+' 至 '+activity.end+'</p>'+(proof?'<p>▧ '+proof.images+' 张附件 · '+escapeShareText(proof.time)+'</p>':'<p>分享活动内容后，上传截图补全凭证。</p>')+(state==='expired'?'<p class="reason">活动已结束，无法补全凭证。</p>':state==='rejected'?'<p class="reason">'+escapeShareText(proof.reason)+'</p>':'')+'<footer><div><button onclick="openProofDetail(\''+activity.id+'\')">查看详情</button><button class="primary" '+(enabled?'':'disabled title="'+(state==='expired'?'活动已过期':'已提交凭证，无需重复补全')+'"')+' onclick="completeActivityProof(\''+activity.id+'\')">补全凭证</button></div></footer></article>';
         }).join('') || '<div class="content-share-empty">暂无'+(status==='all'?'可参与的活动':'该状态的活动')+'</div>';
         renderContentShareTodos();
       }
@@ -2837,10 +2856,10 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         const activity=shareActivities.find(item=>item.id===id || item.id===reviews.find(review=>review.id===id&&review.userId===contentShareUser.id)?.activityId);
         if (!activity || !activity.enabled) {notify('该活动已关闭');return}
         const proof=ownActivityProof(activity.id), attachments=getProofAttachments(proof);
-        const fields=[['内容来源',escapeShareText(activity.source)],['分享渠道',escapeShareText(activity.channel)],['活动周期',activity.start+' 至 '+activity.end],[activity.source==='视频号'?'视频号ID':'活动链接',shareActivityLink(activity)]];
+        const fields=[['内容来源',escapeShareText(activity.source)],['分享渠道',escapeShareText(activity.channel)],['活动周期',activity.start+' 至 '+activity.end]];
         if (proof) fields.push(['提交时间',escapeShareText(proof.time)],['附件数量',proof.images+' 张']);
         openSheet('proofDetail','内容分享详情',activity.name,
-          '<div class="proof-detail-status">'+contentShareBadge(contentShareState(activity))+'</div><dl class="content-share-details">'+fields.map(([label,value])=>'<div><dt>'+label+'</dt><dd>'+value+'</dd></div>').join('')+'</dl>'+(attachments.length?'<div class="proof-attachments"><strong>截图附件</strong><div>'+attachments.map((image,index)=>'<button class="proof-attachment" onclick="previewContentProof(\''+activity.id+'\','+index+')"><img src="'+escapeShareText(image.src)+'" alt="'+escapeShareText(image.name)+'"></button>').join('')+'</div></div>':'')+(proof&&proof.reason?'<div class="proof-reject"><strong>驳回原因</strong><span>'+escapeShareText(proof.reason)+'</span></div>':'')+(canCompleteProof(activity)?'<button class="mainbtn" onclick="closeSheet();completeActivityProof(\''+activity.id+'\')">补全凭证</button>':''));
+          '<div class="proof-detail-status">'+contentShareBadge(contentShareState(activity))+'</div>'+contentSourceCard(activity)+'<dl class="content-share-details">'+fields.map(([label,value])=>'<div><dt>'+label+'</dt><dd>'+value+'</dd></div>').join('')+'</dl>'+(attachments.length?'<div class="proof-attachments"><strong>截图附件</strong><div>'+attachments.map((image,index)=>'<button class="proof-attachment" onclick="previewContentProof(\''+activity.id+'\','+index+')"><img src="'+escapeShareText(image.src)+'" alt="'+escapeShareText(image.name)+'"></button>').join('')+'</div></div>':'')+(proof&&proof.reason?'<div class="proof-reject"><strong>驳回原因</strong><span>'+escapeShareText(proof.reason)+'</span></div>':'')+(canCompleteProof(activity)?'<button class="mainbtn" onclick="closeSheet();completeActivityProof(\''+activity.id+'\')">补全凭证</button>':''));
       }
       function previewContentProof(activityId,index) {
         const attachment=getProofAttachments(ownActivityProof(activityId))[index];
