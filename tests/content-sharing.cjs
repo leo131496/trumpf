@@ -20,16 +20,46 @@ const {chromium} = require('playwright');
     assert.ok(await guide.isVisible(),'The home shortcut must show the first-visit guide');
     assert.equal(await page.locator('[data-view="tasks"]').isVisible(),false);
     assert.equal(await guide.locator('li').count(),4);
-    for (const text of ['【打开视频号】','【打开文章】','微信朋友圈','本地相册','【通快客户积分中心】','【补全凭证】','【提交审核】','等待运营人员审核']) assert.ok((await guide.innerText()).includes(text));
+    assert.ok(await page.locator('#contentShareGuidePrevious').isDisabled());
+    assert.equal(await page.locator('#contentShareGuideConfirm').isVisible(),false);
+    await page.locator('#contentShareGuideNext').click();
     await guide.getByRole('button',{name:'返回首页',exact:true}).click();
     await page.locator('[data-nav="tasks"]').click();
     assert.ok(await guide.isVisible(),'The bottom navigation must also show the unacknowledged guide');
-    for (const width of [320,390]) {
-      await page.setViewportSize({width,height:1000});
-      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
-    }
+    assert.equal(await guide.locator('[data-guide-step]:visible').getAttribute('data-guide-step'),'0','Returning to the unacknowledged guide starts at the first step');
+    await page.reload();
+    await page.evaluate(()=>login());
+    await page.locator('[data-mode="phone"]').click();
+    await page.locator('[data-nav="tasks"]').click();
+    assert.ok(await guide.isVisible(),'Reading a step must not acknowledge the guide');
+    const phrases=[['【打开视频号】','【打开文章】'],['微信朋友圈','本地相册'],['【通快客户积分中心】','【补全凭证】'],['【提交审核】','等待运营人员审核']];
     await page.waitForFunction(()=>!document.getElementById('toast').classList.contains('on'));
-    await page.screenshot({path:path.join(os.tmpdir(),'trumpf-content-first-guide.png'),fullPage:true});
+    for (const width of [320,390]) {
+      await page.setViewportSize({width,height:760});
+      await page.evaluate(()=>setContentShareGuideStep(0));
+      for (let step=0;step<4;step++) {
+        const slide=guide.locator('[data-guide-step]:visible');
+        assert.equal(await slide.count(),1);
+        assert.equal(await slide.getAttribute('data-guide-step'),String(step));
+        assert.equal(await slide.getByRole('img').count(),1);
+        for (const phrase of phrases[step]) assert.ok((await slide.innerText()).includes(phrase));
+        assert.equal(await guide.locator('[aria-current="step"]').innerText(),['1 打开','2 分享','3 上传','4 提交'][step]);
+        assert.equal(await page.locator('#contentShareGuideConfirm').isVisible(),step===3);
+        assert.equal(await page.locator('#contentShareGuideNext').isVisible(),step!==3);
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+        assert.equal(await slide.evaluate(el=>el.scrollWidth>el.clientWidth),false);
+        await page.locator('#mobile').screenshot({path:path.join(os.tmpdir(),`trumpf-guide-${width}-step-${step+1}.png`)});
+        if(step<3) await page.locator('#contentShareGuideNext').click();
+      }
+      await page.locator('#contentShareGuidePrevious').click();
+      assert.equal(await guide.locator('[data-guide-step]:visible').getAttribute('data-guide-step'),'2');
+      await page.locator('#contentShareGuideNext').click();
+    }
+    await page.evaluate(()=>setContentShareGuideStep(99));
+    assert.equal(await guide.locator('[data-guide-step]:visible').getAttribute('data-guide-step'),'3');
+    await page.evaluate(()=>setContentShareGuideStep(-1));
+    assert.ok(await page.locator('#contentShareGuidePrevious').isDisabled());
+    await page.evaluate(()=>setContentShareGuideStep(3));
     await page.locator('#contentShareGuideConfirm').click();
     assert.ok(await page.locator('[data-view="tasks"]').isVisible());
     await page.evaluate(()=>showView('home'));
