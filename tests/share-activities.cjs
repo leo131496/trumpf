@@ -67,7 +67,8 @@ const { chromium } = require('playwright');
 
     await list.getByRole('button', {name:'新建活动', exact:true}).click();
     assert.deepEqual(await page.locator('#shareActivitySource option').allTextContents(), ['视频号','公众号']);
-    assert.equal(await page.locator('#shareActivityChannel').getAttribute('type'), null);
+    assert.equal(await page.locator('#shareActivityChannel').inputValue(),'微信朋友圈');
+    assert.equal(await page.locator('#shareActivityChannel').isEditable(),false);
     const save = page.locator('#shareActivityForm button[type="submit"]');
     const expectError = async text => { await save.click(); assert.match(await page.locator('#shareActivityError').innerText(), text); assert.ok(await page.locator('#shareActivityEditor').isVisible()); };
     await expectError(/请填写活动名称/);
@@ -87,8 +88,8 @@ const { chromium } = require('playwright');
     await page.locator('#shareActivityLink').fill('javascript:alert(1)');
     await expectError(/有效的活动链接/);
     await page.locator('#shareActivityLink').fill('https://example.com/activity?a=1&b=2');
-    await expectError(/请填写分享渠道/);
-    await page.locator('#shareActivityChannel').fill('微信朋友圈、企业微信群');
+    // Even a modified DOM value must not create an unsupported share channel.
+    await page.locator('#shareActivityChannel').evaluate(el=>el.value='微信好友');
     await expectError(/开始日期/);
     await page.locator('#shareActivityStart').fill('2026-11-13');
     await expectError(/结束日期/);
@@ -110,9 +111,11 @@ const { chromium } = require('playwright');
     assert.equal(await page.evaluate(() => window.activityXss), undefined);
     assert.equal(await page.evaluate(id => shareActivities.find(a=>a.id===id).videoId,createdId),'');
     assert.equal(await created.locator('td').nth(5).innerText(),'通快运营管理员');
+    assert.equal(await created.locator('td').nth(3).innerText(),'微信朋友圈');
 
     await created.getByRole('button',{name:'详情',exact:true}).click();
-    assert.match(await page.locator('#shareActivityDetailFields').innerText(), /微信朋友圈、企业微信群/);
+    assert.match(await page.locator('#shareActivityDetailFields').innerText(), /微信朋友圈/);
+    assert.doesNotMatch(await page.locator('#shareActivityDetailFields').innerText(), /微信好友/);
     assert.equal(await page.locator('#shareActivityDetailFields input:not([role="switch"])').count(), 0);
     assert.equal(await page.locator('#shareActivityDetailFields a').getAttribute('href'), 'https://example.com/activity?a=1&b=2');
     await page.locator('#shareActivityDetailEdit').click();

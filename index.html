@@ -1896,27 +1896,14 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
 .content-source-open:focus-visible{outline:2px solid var(--b);outline-offset:3px}
 .proof-attachments .proof-attachment{padding:0;overflow:hidden}
 #contentShareTodoHome .task{width:100%}
-#mobile .content-share-guide-intro{margin:2px 0 16px}
+#mobile .content-share-guide-intro{margin:2px 0 14px}
 #mobile .content-share-guide-intro h1{font-size:21px;line-height:1.5;margin:0 0 4px}
 #mobile .content-share-guide-intro p{font-size:12px;line-height:1.7;color:var(--m);margin:0}
-.content-share-guide-progress{display:flex;gap:6px;margin-bottom:12px}
-.content-share-guide-progress span{flex:1;text-align:center;font-size:11px;color:var(--m);padding-top:8px;border-top:3px solid var(--line)}
-.content-share-guide-progress span[aria-current="step"]{color:var(--b);border-color:var(--b);font-weight:650}
-.content-share-guide-steps{list-style:none;padding:0;margin:0 0 16px}
-.content-share-guide-steps li{padding:0;overflow:hidden;background:#FFFFFF;border:1px solid var(--line);border-radius:14px}
-.content-share-guide-art{padding:12px;background:rgba(0,102,255,.05)}
-.content-share-guide-art svg{display:block;width:100%;height:auto;max-height:216px;color:var(--n);font-family:inherit}
-.content-share-guide-copy{padding:16px 18px;min-height:110px}
-#mobile .content-share-guide-copy h2{margin:0 0 8px;font-size:17px;line-height:1.5}
-#mobile .content-share-guide-copy p{margin:0;font-size:12px;line-height:1.9;color:var(--m)}
-.content-share-guide-copy b{color:var(--n);font-weight:600}
-.content-share-guide-controls{display:flex;gap:10px;align-items:center}
-#mobile .content-share-guide-controls button{min-height:44px;margin:0;font:inherit;font-size:13px;border-radius:8px;cursor:pointer}
-#mobile .content-share-guide-controls .mainbtn{flex:1;padding:12px 8px}
-#contentShareGuidePrevious{padding:12px 16px;background:#FFFFFF;border:1px solid var(--line);color:var(--n)}
-#contentShareGuidePrevious:disabled{opacity:.4;cursor:default}
-.content-share-guide-controls button:focus-visible{outline:2px solid var(--b);outline-offset:3px}
-.content-share-guide-caption{margin:12px 0 0;text-align:center;font-size:10px;color:var(--m)}
+.content-share-guide-figure{margin:0 0 16px;padding:12px;background:rgba(0,102,255,.05);border:1px solid var(--line);border-radius:14px}
+.content-share-guide-figure svg{display:block;width:100%;height:auto;max-height:364px;font-family:inherit}
+#mobile #contentShareGuideConfirm{margin:0;min-height:44px;font-size:13px}
+#contentShareGuideConfirm:focus-visible{outline:2px solid var(--b);outline-offset:3px}
+.content-share-guide-caption{margin:10px 0 0;text-align:center;font-size:10px;color:var(--m)}
 .content-share-instructions{padding:11px 12px;margin:12px 0;background:var(--blue-soft);border-radius:8px}.content-share-instructions>strong{font-size:11px;font-weight:600}
 #mobile .proof-record .content-share-instructions p{margin:5px 0 0;font-size:10px;line-height:1.9}.content-share-instructions b{font-weight:550;color:var(--n)}
 </style>
@@ -2006,69 +1993,31 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           </section>
           <section class="view" data-view="contentShareGuide">
             <div class="subhead"><button onclick="showView('home')" aria-label="返回首页">‹</button><strong>内容分享指引</strong><span></span></div>
-            <div class="content-share-guide-intro"><h1>跟着图示，轻松完成分享</h1><p>先分享，再截图，最后上传审核。</p></div>
-            <div class="content-share-guide-progress" aria-label="分享操作步骤"><span aria-current="step">1 打开</span><span>2 分享</span><span>3 上传</span><span>4 提交</span></div>
-            <ol class="content-share-guide-steps" aria-live="polite">
-              <li data-guide-step="0">
-                <div class="content-share-guide-art"><svg viewBox="0 0 300 236" role="img" aria-label="按活动来源打开视频号或公众号文章">
-<rect x="21" y="12" width="258" height="212" rx="14" fill="white" stroke="#20252D" stroke-opacity=".12"/>
-<text x="39" y="38" font-size="13" font-weight="600">内容分享</text><text x="261" y="38" text-anchor="end" font-size="11" fill="#20252D" fill-opacity=".55">操作示意</text>
-<rect x="36" y="52" width="228" height="70" rx="8" fill="#0066FF" fill-opacity=".06"/>
-<rect x="47" y="66" width="36" height="42" rx="6" fill="#0066FF" fill-opacity=".13"/><path d="m60 78 12 9-12 9z" fill="#0066FF"/>
-<text x="94" y="76" font-size="12">微信视频号动态</text><rect x="94" y="85" width="101" height="27" rx="14" fill="#0066FF"/><text x="144" y="103" text-anchor="middle" font-size="12" fill="white">打开视频号</text>
-<rect x="36" y="135" width="228" height="70" rx="8" fill="#0066FF" fill-opacity=".06"/>
-<rect x="47" y="149" width="36" height="42" rx="6" fill="#0066FF" fill-opacity=".13"/><path d="M56 160h18m-18 7h18m-18 7h12" stroke="#0066FF" stroke-width="2"/>
-<text x="94" y="159" font-size="12">微信公众号文章</text><rect x="94" y="168" width="101" height="27" rx="14" fill="#0066FF"/><text x="144" y="186" text-anchor="middle" font-size="12" fill="white">打开文章</text>
-<path d="m212 95-9 13 8-1 4 8 5-3-5-8 7-2z" fill="#20252D"/>
-</svg></div>
-                <div class="content-share-guide-copy"><h2>打开并查看内容</h2><p>按活动来源，点击<b>【打开视频号】</b>或<b>【打开文章】</b>，查看对应内容。</p></div>
-              </li>
-              <li data-guide-step="1" hidden>
-                <div class="content-share-guide-art"><svg viewBox="0 0 300 236" role="img" aria-label="将内容分享到微信朋友圈，截图保存到本地相册">
-<rect x="24" y="12" width="252" height="147" rx="12" fill="white" stroke="#20252D" stroke-opacity=".12"/>
-<text x="42" y="38" font-size="13" font-weight="600">微信朋友圈</text>
-<rect x="42" y="52" width="28" height="28" rx="6" fill="#0066FF" fill-opacity=".14"/><circle cx="56" cy="61" r="4" fill="#0066FF"/><path d="M48 74q0-12 16 0" fill="#0066FF"/>
-<text x="80" y="64" font-size="12">我的分享</text><path d="M80 76h120" stroke="#20252D" stroke-opacity=".15" stroke-width="4"/>
-<rect x="80" y="89" width="174" height="48" rx="5" fill="#0066FF" fill-opacity=".06"/><path d="m95 103 14 10-14 10z" fill="#0066FF"/><text x="122" y="117" font-size="12">已分享的活动内容</text>
-<path d="M17 43V5h38m190 0h38v38M17 128v38h38m190 0h38v-38" stroke="#0066FF" stroke-width="2.5" fill="none"/>
-<path d="M150 168v17m-6-6 6 6 6-6" stroke="#0066FF" stroke-width="2" fill="none"/>
-<rect x="50" y="193" width="200" height="32" rx="16" fill="#0066FF"/><path d="m68 209 4 4 8-8" stroke="white" stroke-width="2" fill="none"/><text x="160" y="214" text-anchor="middle" font-size="13" fill="white">截图保存到本地相册</text>
-</svg></div>
-                <div class="content-share-guide-copy"><h2>分享朋友圈，保存截图</h2><p>使用分享功能，将内容分享到<b>微信朋友圈</b>，再截图保存到<b>本地相册</b>。</p></div>
-              </li>
-              <li data-guide-step="2" hidden>
-                <div class="content-share-guide-art"><svg viewBox="0 0 300 236" role="img" aria-label="返回通快客户积分中心，进入内容分享并补全凭证上传截图">
-<rect x="26" y="8" width="248" height="220" rx="14" fill="white" stroke="#20252D" stroke-opacity=".12"/>
-<text x="150" y="34" text-anchor="middle" font-size="14" font-weight="600">通快客户积分中心</text>
-<path d="M42 47h216" stroke="#20252D" stroke-opacity=".1"/>
-<text x="44" y="70" font-size="12">内容分享</text><path d="m106 62 5 5-5 5" stroke="#20252D" fill="none"/>
-<rect x="122" y="52" width="132" height="29" rx="15" fill="#0066FF"/><text x="188" y="72" text-anchor="middle" font-size="12" fill="white">补全凭证</text>
-<text x="44" y="109" font-size="12" font-weight="600">上传朋友圈截图</text>
-<rect x="44" y="122" width="90" height="77" rx="6" fill="#0066FF" fill-opacity=".06" stroke="#0066FF" stroke-dasharray="4 3"/><path d="M78 160h22m-11-11v22" stroke="#0066FF" stroke-width="2"/><text x="89" y="189" text-anchor="middle" font-size="10" fill="#0066FF">从相册选择</text>
-<path d="M143 160h16m-5-5 5 5-5 5" stroke="#0066FF" stroke-width="2" fill="none"/>
-<rect x="170" y="122" width="84" height="77" rx="6" fill="#0066FF" fill-opacity=".08"/><rect x="181" y="133" width="18" height="18" rx="3" fill="#0066FF" fill-opacity=".25"/><path d="M205 138h37m-37 9h26M181 161h61m-61 9h61m-61 9h42" stroke="#20252D" stroke-opacity=".2" stroke-width="3"/>
-<circle cx="247" cy="126" r="10" fill="#0066FF"/><path d="m242 126 3 3 5-6" stroke="white" stroke-width="1.8" fill="none"/>
-<text x="150" y="216" text-anchor="middle" font-size="10" fill="#20252D" fill-opacity=".6">选择刚刚保存的截图</text>
-</svg></div>
-                <div class="content-share-guide-copy"><h2>返回小程序，上传截图</h2><p>回到<b>【通快客户积分中心】</b>的内容分享页面，点击对应活动<b>【补全凭证】</b>，上传截图。</p></div>
-              </li>
-              <li data-guide-step="3" hidden>
-                <div class="content-share-guide-art"><svg viewBox="0 0 300 236" role="img" aria-label="确认截图后提交审核，在内容分享页面查看审核进度">
-<rect x="36" y="10" width="228" height="211" rx="14" fill="white" stroke="#20252D" stroke-opacity=".12"/>
-<circle cx="150" cy="55" r="25" fill="#0066FF" fill-opacity=".08"/><path d="m137 55 9 9 17-19" stroke="#0066FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-<text x="150" y="99" text-anchor="middle" font-size="14" font-weight="600">确认截图，提交凭证</text>
-<rect x="63" y="114" width="174" height="34" rx="8" fill="#0066FF"/><text x="150" y="136" text-anchor="middle" font-size="13" fill="white">提交审核</text>
-<path d="M88 171h124" stroke="#0066FF" stroke-opacity=".2" stroke-width="2"/><circle cx="88" cy="171" r="5" fill="#0066FF"/><circle cx="150" cy="171" r="5" fill="white" stroke="#0066FF" stroke-width="2"/><circle cx="212" cy="171" r="5" fill="white" stroke="#20252D" stroke-opacity=".3" stroke-width="2"/>
-<text x="88" y="196" text-anchor="middle" font-size="11">已提交</text><text x="150" y="196" text-anchor="middle" font-size="11" fill="#0066FF">审核中</text><text x="212" y="196" text-anchor="middle" font-size="11">查看结果</text>
-</svg></div>
-                <div class="content-share-guide-copy"><h2>提交审核，等待结果</h2><p>确认图片后点击<b>【提交审核】</b>，等待运营人员审核。可在内容分享页面查看进度。</p></div>
-              </li>
-            </ol>
-            <div class="content-share-guide-controls">
-              <button id="contentShareGuidePrevious" type="button" onclick="setContentShareGuideStep(contentShareGuideStep-1)" disabled>上一步</button>
-              <button class="mainbtn" id="contentShareGuideNext" type="button" onclick="setContentShareGuideStep(contentShareGuideStep+1)">下一步</button>
-              <button class="mainbtn" id="contentShareGuideConfirm" type="button" onclick="finishContentShareGuide()" hidden>我知道了，开始分享</button>
-            </div>
+            <div class="content-share-guide-intro"><h1>一张图，看懂内容分享</h1><p>仅限分享至微信朋友圈，截图后上传凭证。</p></div>
+            <figure class="content-share-guide-figure">
+              <svg viewBox="0 0 300 364" role="img" aria-labelledby="contentShareDiagramTitle contentShareDiagramDesc">
+                <title id="contentShareDiagramTitle">内容分享完整流程图</title>
+                <desc id="contentShareDiagramDesc">点击打开视频号或打开文章查看内容，分享至微信朋友圈，截图保存到本地相册。返回通快客户积分中心的内容分享页面，点击补全凭证上传截图，提交审核并等待运营人员审核。</desc>
+                <rect x="12" y="6" width="276" height="68" rx="10" fill="#FFFFFF"/>
+                <text x="150" y="28" text-anchor="middle" font-size="13" fill="#20252D">查看活动对应的视频或文章</text>
+                <rect x="29" y="39" width="112" height="26" rx="13" fill="#0066FF"/><path d="m40 46 8 6-8 6z" fill="#FFFFFF"/><text x="91" y="57" text-anchor="middle" font-size="12" fill="#FFFFFF">打开视频号</text>
+                <rect x="159" y="39" width="112" height="26" rx="13" fill="#0066FF"/><path d="M170 47h10m-10 5h10m-10 5h7" stroke="#FFFFFF" stroke-width="1.5"/><text x="223" y="57" text-anchor="middle" font-size="12" fill="#FFFFFF">打开文章</text>
+                <path d="M150 79v26m-5-6 5 6 5-6" fill="none" stroke="#0066FF" stroke-width="2"/><text x="164" y="95" font-size="11" fill="#0066FF">分享至朋友圈</text>
+                <rect x="36" y="112" width="228" height="102" rx="10" fill="#FFFFFF"/>
+                <text x="54" y="134" font-size="14" font-weight="600" fill="#20252D">微信朋友圈</text>
+                <rect x="54" y="145" width="26" height="26" rx="5" fill="#0066FF" fill-opacity=".12"/><circle cx="67" cy="153" r="4" fill="#0066FF"/><path d="M59 168q0-12 16 0" fill="#0066FF"/>
+                <text x="91" y="155" font-size="11" fill="#20252D">我的活动分享</text><path d="M91 166h144" stroke="#20252D" stroke-opacity=".14" stroke-width="3"/>
+                <rect x="91" y="176" width="144" height="23" rx="4" fill="#0066FF" fill-opacity=".07"/><text x="163" y="192" text-anchor="middle" font-size="11" fill="#20252D">已分享的视频 / 文章</text>
+                <path d="M28 133v-29h29m186 0h29v29M28 193v29h29m186 0h29v-29" fill="none" stroke="#0066FF" stroke-width="2"/>
+                <path d="M150 226v27m-5-6 5 6 5-6" fill="none" stroke="#0066FF" stroke-width="2"/><text x="164" y="242" font-size="11" fill="#0066FF">截图保存到相册</text>
+                <rect x="12" y="262" width="276" height="96" rx="10" fill="#FFFFFF"/>
+                <text x="150" y="284" text-anchor="middle" font-size="13" font-weight="600" fill="#20252D">返回「通快客户积分中心」</text>
+                <text x="150" y="303" text-anchor="middle" font-size="11" fill="#20252D">内容分享 → 补全凭证 → 上传截图</text>
+                <rect x="29" y="316" width="112" height="28" rx="7" fill="#0066FF"/><text x="85" y="335" text-anchor="middle" font-size="12" fill="#FFFFFF">提交审核</text>
+                <path d="M149 330h17m-5-5 5 5-5 5" fill="none" stroke="#0066FF" stroke-width="1.5"/><text x="221" y="335" text-anchor="middle" font-size="12" fill="#20252D">等待运营审核</text>
+              </svg>
+            </figure>
+            <button class="mainbtn" id="contentShareGuideConfirm" type="button" onclick="finishContentShareGuide()">我知道了，开始分享</button>
             <p class="content-share-guide-caption">操作示意图 · 请以微信实际页面为准</p>
           </section>
           <section class="view" data-view="tasks">
@@ -2277,7 +2226,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       <div class="share-form-grid">
         <label class="share-wide" for="shareActivityName">活动名称 <span>必填</span><input id="shareActivityName" required maxlength="100" placeholder="请输入活动名称"></label>
         <label for="shareActivitySource">内容来源 <span>必填</span><select id="shareActivitySource" required><option value="视频号">视频号</option><option value="公众号">公众号</option></select></label>
-        <label for="shareActivityChannel">分享渠道 <span>必填</span><input id="shareActivityChannel" required maxlength="200" placeholder="如：微信朋友圈、微信好友"></label>
+        <label for="shareActivityChannel">分享渠道 <span>仅支持朋友圈</span><input id="shareActivityChannel" value="微信朋友圈" readonly></label>
         <label class="share-wide" id="shareActivityVideoField" for="shareActivityVideoId">视频号ID <span>必填</span><input id="shareActivityVideoId" required maxlength="200" placeholder="请输入视频号ID"></label>
         <label class="share-wide" id="shareActivityLinkField" for="shareActivityLink" hidden>活动链接地址 <span>必填</span><input id="shareActivityLink" type="url" disabled maxlength="2000" placeholder="请输入以 https:// 或 http:// 开头的活动链接"></label>
         <fieldset class="share-wide share-period"><legend>活动周期 <span>必填</span></legend><div><label for="shareActivityStart">开始日期<input id="shareActivityStart" type="date" required></label><b>至</b><label for="shareActivityEnd">结束日期<input id="shareActivityEnd" type="date" required></label></div></fieldset>
@@ -2584,10 +2533,10 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       ];
       let reviews = [
         { id: "PZ-20260920-001", u: "王海峰", phone:"138****3156", ch: "视频号", cat:"新品发布", share:"微信朋友圈", link:"https://channels.weixin.qq.com/trulaser5000", c: "TruLaser 5000 新品亮点朋友圈分享", time:"2026-09-20 10:26", images:3, s: "pending" },
-        { id: "PZ-20260918-002", u: "张晓玲", phone:"186****8260", ch: "公众号", cat:"客户案例", share:"微信好友", link:"https://mp.weixin.qq.com/trumpf-case", c: "钣金柔性生产客户案例分享", time:"2026-09-18 16:40", images:2, s: "pending" },
-        { id: "PZ-20260921-004", u: "陈静", phone:"137****5932", ch: "公众号", cat:"技术文章", share:"微信好友", link:"https://mp.weixin.qq.com/smart-factory", c: "智能工厂自动化升级案例分享", time:"2026-09-21 09:35", images:2, s: "pending" },
+        { id: "PZ-20260918-002", u: "张晓玲", phone:"186****8260", ch: "公众号", cat:"客户案例", share:"微信朋友圈", link:"https://mp.weixin.qq.com/trumpf-case", c: "钣金柔性生产客户案例分享", time:"2026-09-18 16:40", images:2, s: "pending" },
+        { id: "PZ-20260921-004", u: "陈静", phone:"137****5932", ch: "公众号", cat:"技术文章", share:"微信朋友圈", link:"https://mp.weixin.qq.com/smart-factory", c: "智能工厂自动化升级案例分享", time:"2026-09-21 09:35", images:2, s: "pending" },
         { id: "PZ-20260921-005", u: "赵磊", phone:"135****7268", ch: "视频号", cat:"产品应用", share:"微信朋友圈", link:"https://channels.weixin.qq.com/trubend5000", c: "TruBend 5000 高效折弯应用分享", time:"2026-09-21 09:12", images:3, s: "pending" },
-        { id: "PZ-20260920-006", u: "孙莉", phone:"189****3471", ch: "公众号", cat:"活动资讯", share:"微信好友", link:"https://mp.weixin.qq.com/smart-manufacturing", c: "2026 钣金智能制造峰会预告分享", time:"2026-09-20 17:48", images:2, s: "pending" },
+        { id: "PZ-20260920-006", u: "孙莉", phone:"189****3471", ch: "公众号", cat:"活动资讯", share:"微信朋友圈", link:"https://mp.weixin.qq.com/smart-manufacturing", c: "2026 钣金智能制造峰会预告分享", time:"2026-09-20 17:48", images:2, s: "pending" },
         { id: "PZ-20260920-007", u: "周凯", phone:"136****8019", ch: "视频号", cat:"客户故事", share:"微信朋友圈", link:"https://channels.weixin.qq.com/customer-story", c: "新能源设备客户成功案例分享", time:"2026-09-20 15:20", images:4, s: "pending" },
         { id: "PZ-20260916-003", u: "李伟", phone:"139****4108", ch: "视频号", cat:"技术课堂", share:"微信朋友圈", link:"https://channels.weixin.qq.com/laser-tips", c: "激光切割质量优化技巧分享", time:"2026-09-16 09:15", images:1, s: "approved" },
       ];
@@ -2604,7 +2553,6 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       let proofImages = [], completingActivityId = null, proofUploadBusy = false, proofDraftVersion = 0;
       let contentShareFilter = 'all', contentTodoFilter = 'pending';
       let contentShareGuideAcknowledged = false;
-      let contentShareGuideStep = 0;
       // Use the same submissions in the customer list and the operator's review queue.
       reviews.forEach(review=>{
         if (['PZ-20260920-001','PZ-20260918-002','PZ-20260916-003'].includes(review.id)) {
@@ -2675,12 +2623,13 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         showShareActivityView('Editor');
         document.getElementById('shareActivityEditorTitle').textContent = activity ? '编辑活动' : '新建活动';
         document.getElementById('shareActivityForm').reset();
-        const fields = {Name:'name', Source:'source', Link:'link', VideoId:'videoId', Channel:'channel', Start:'start', End:'end'};
+        const fields = {Name:'name', Source:'source', Link:'link', VideoId:'videoId', Start:'start', End:'end'};
         Object.entries(fields).forEach(([field,key]) => {
           const input = document.getElementById('shareActivity' + field);
           input.value = activity ? activity[key] : (field === 'Source' ? '视频号' : '');
           input.removeAttribute('aria-invalid');
         });
+        document.getElementById('shareActivityChannel').value = '微信朋友圈';
         document.getElementById('shareActivityEnabled').checked = activity ? activity.enabled : true;
         document.getElementById('shareActivityStateText').textContent = activity && !activity.enabled ? '关闭' : '开启';
         syncShareActivitySource();
@@ -2694,7 +2643,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         if (activity && activity.enabled) {notify('活动开启中，请先关闭活动后再编辑'); return}
         const read = suffix => document.getElementById('shareActivity' + suffix).value.trim();
         const source = read('Source');
-        const draft = {name:read('Name'), source, link:source === '公众号' ? read('Link') : '', videoId:source === '视频号' ? read('VideoId') : '', channel:read('Channel'), start:read('Start'), end:read('End'), enabled:document.getElementById('shareActivityEnabled').checked};
+        const draft = {name:read('Name'), source, link:source === '公众号' ? read('Link') : '', videoId:source === '视频号' ? read('VideoId') : '', channel:'微信朋友圈', start:read('Start'), end:read('End'), enabled:document.getElementById('shareActivityEnabled').checked};
         const error = (field,message) => {
           const input = document.getElementById('shareActivity' + field);
           input.setAttribute('aria-invalid','true');
@@ -2712,7 +2661,6 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
           try { if (!['http:','https:'].includes(new URL(draft.link).protocol)) throw new Error(); }
           catch { return error('Link','请输入有效的活动链接地址，以 http:// 或 https:// 开头'); }
         }
-        if (!draft.channel) return error('Channel','请填写分享渠道');
         if (!draft.start) return error('Start','请选择活动开始日期');
         if (!draft.end) return error('End','请选择活动结束日期');
         if (draft.end < draft.start) return error('End','活动结束日期不能早于开始日期');
@@ -2824,7 +2772,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         document.getElementById("homeRoleToggle").style.display = v === "home" ? "flex" : "none";
         document.getElementById("mobile").classList.toggle("rules-mode", v === "pointsRules");
         if (v === "tasks") renderProofRecords("all");
-        if (v === 'contentShareGuide') setContentShareGuideStep(0);
+        if (v === 'contentShareGuide') document.querySelector('#mobile .content').scrollTop = 0;
         if (v === "home" || v === "todos") renderContentShareTodos();
       }
       function switchHomeRole(){const next=role==='personal'?'company':'personal';setRole(next);showView('home');notify(next==='company'?'已切换为企业身份':'已切换为个人身份')}
@@ -2924,36 +2872,20 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         return proof.attachments || Array.from({length:proof.images},(_,index)=>({name:'分享截图 '+(index+1),src:'assets/proof-reference.png'}));
       }
       function proofFilter(status) { renderProofRecords(status); }
-      function setContentShareGuideStep(step) {
-        contentShareGuideStep = Math.max(0, Math.min(3, step));
-        document.querySelectorAll('[data-guide-step]').forEach((slide,index)=>slide.hidden=index!==contentShareGuideStep);
-        document.querySelectorAll('.content-share-guide-progress span').forEach((item,index)=>{
-          if (index===contentShareGuideStep) item.setAttribute('aria-current','step');
-          else item.removeAttribute('aria-current');
-        });
-        document.getElementById('contentShareGuidePrevious').disabled = contentShareGuideStep===0;
-        document.getElementById('contentShareGuideNext').hidden = contentShareGuideStep===3;
-        document.getElementById('contentShareGuideConfirm').hidden = contentShareGuideStep!==3;
-        document.querySelector('#mobile .content').scrollTop = 0;
-        const guide = document.querySelector('[data-view="contentShareGuide"]');
-        if (guide.contains(document.activeElement) && document.activeElement.closest('[hidden]')) {
-          document.getElementById(contentShareGuideStep===3?'contentShareGuideConfirm':'contentShareGuideNext').focus({preventScroll:true});
-        }
-      }
       function hasSeenContentShareGuide() {
         if (contentShareGuideAcknowledged) return true;
-        try { return localStorage.getItem('tk-content-share-guide-v2:'+contentShareUser.id) === '1'; }
+        try { return localStorage.getItem('tk-content-share-guide-v3:'+contentShareUser.id) === '1'; }
         catch { return false; }
       }
       function finishContentShareGuide() {
         contentShareGuideAcknowledged = true;
-        try { localStorage.setItem('tk-content-share-guide-v2:'+contentShareUser.id,'1'); } catch {}
+        try { localStorage.setItem('tk-content-share-guide-v3:'+contentShareUser.id,'1'); } catch {}
         showView('tasks');
         document.querySelector('#mobile .content').scrollTop = 0;
       }
       function contentShareInstructions(activity) {
         const video=activity.source==='视频号';
-        return '<div class="content-share-instructions"><strong>操作说明</strong><p>先点击<b>【'+(video?'打开视频号':'打开文章')+'】</b>，在'+(video?'视频号':'公众号')+'页面查看内容，并通过分享功能分享到<b>微信朋友圈</b>。截图保存到本地相册后，返回<b>【通快客户积分中心】</b>的内容分享页面，点击<b>【补全凭证】</b>上传截图，再点击<b>【提交审核】</b>，等待运营人员审核。</p></div>';
+        return '<div class="content-share-instructions"><strong>操作说明</strong><p>【'+(video?'打开视频号':'打开文章')+'】后分享到<b>微信朋友圈</b>并截图，返回本页点击<b>【补全凭证】</b>，上传截图并提交审核。</p></div>';
       }
       function contentSourceCard(activity) {
         const article=activity.source==='公众号';
