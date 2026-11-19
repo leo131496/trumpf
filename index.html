@@ -1896,6 +1896,13 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
 .content-source-open:focus-visible{outline:2px solid var(--b);outline-offset:3px}
 .proof-attachments .proof-attachment{padding:0;overflow:hidden}
 #contentShareTodoHome .task{width:100%}
+.content-share-guide-intro{margin:4px 0 20px}.content-share-guide-intro h1{font-size:22px;line-height:1.5;margin:0 0 7px}.content-share-guide-intro p{font-size:11px;line-height:1.8;color:var(--m);margin:0}
+.content-share-guide-steps{list-style:none;padding:4px 18px;margin:0 0 20px;background:#FFFFFF;border:1px solid var(--line);border-radius:12px}
+.content-share-guide-steps li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}.content-share-guide-steps li:last-child{border-bottom:0}
+.content-share-guide-steps .step-number{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);color:var(--b);font-size:12px;font-weight:650}
+.content-share-guide-steps h2{margin:1px 0 6px;font-size:13px;line-height:1.6}.content-share-guide-steps p{margin:0;font-size:11px;line-height:1.9;color:var(--m);overflow-wrap:anywhere}.content-share-guide-steps b{color:var(--n);font-weight:550}
+.content-share-instructions{padding:11px 12px;margin:12px 0;background:var(--blue-soft);border-radius:8px}.content-share-instructions>strong{font-size:11px;font-weight:600}
+#mobile .proof-record .content-share-instructions p{margin:5px 0 0;font-size:10px;line-height:1.9}.content-share-instructions b{font-weight:550;color:var(--n)}
 </style>
 </head>
   <body data-screen="split">
@@ -1980,6 +1987,17 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
                 <b>+500,000</b>
               </div>
             </div>
+          </section>
+          <section class="view" data-view="contentShareGuide">
+            <div class="subhead"><button onclick="showView('home')" aria-label="返回首页">‹</button><strong>内容分享指引</strong><span></span></div>
+            <div class="content-share-guide-intro"><h1>先分享内容，再上传凭证</h1><p>按照以下 4 步完成内容分享与审核提交。</p></div>
+            <ol class="content-share-guide-steps">
+              <li><span class="step-number" aria-hidden="true">1</span><div><h2>打开并查看内容</h2><p>在内容分享页面，点击<b>【打开视频号】</b>或<b>【打开文章】</b>，前往对应的视频号页面或公众号页面查看内容。</p></div></li>
+              <li><span class="step-number" aria-hidden="true">2</span><div><h2>分享朋友圈，保存截图</h2><p>通过视频号或公众号页面的分享功能，将内容分享到<b>微信朋友圈</b>。分享后截图，并保存到<b>本地相册</b>。</p></div></li>
+              <li><span class="step-number" aria-hidden="true">3</span><div><h2>返回小程序，补全凭证</h2><p>重新打开<b>【通快客户积分中心】</b>小程序，进入内容分享页面，找到对应活动并点击<b>【补全凭证】</b>，上传刚刚保存的截图。</p></div></li>
+              <li><span class="step-number" aria-hidden="true">4</span><div><h2>提交审核，等待结果</h2><p>确认图片后点击<b>【提交审核】</b>，等待运营人员审核。可在内容分享页面查看审核进度与结果。</p></div></li>
+            </ol>
+            <button class="mainbtn" id="contentShareGuideConfirm" onclick="finishContentShareGuide()">我知道了，开始分享</button>
           </section>
           <section class="view" data-view="tasks">
             <div class="proof-page-head">
@@ -2513,6 +2531,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
       const contentShareUser = {id:'MEMBER-6028',name:'钱辰',phone:'138****6028'};
       let proofImages = [], completingActivityId = null, proofUploadBusy = false, proofDraftVersion = 0;
       let contentShareFilter = 'all', contentTodoFilter = 'pending';
+      let contentShareGuideAcknowledged = false;
       // Use the same submissions in the customer list and the operator's review queue.
       reviews.forEach(review=>{
         if (['PZ-20260920-001','PZ-20260918-002','PZ-20260916-003'].includes(review.id)) {
@@ -2718,6 +2737,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         notify(role === "company" ? "企业负责人激活并绑定成功" : "个人会员登录成功");
       }
       function showView(v) {
+        if (v === 'tasks' && !hasSeenContentShareGuide()) v = 'contentShareGuide';
         if (v !== "newProof" && completingActivityId) clearProofDraft();
         document
           .querySelectorAll(".view")
@@ -2725,12 +2745,13 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         document
           .querySelectorAll("[data-nav]")
           .forEach((x) => x.classList.toggle("on", x.dataset.nav === v));
-        document.getElementById("bottom").style.display = ["pointsDetail", "pointsRules", "productDetail", "orders", "orderDetail", "addresses", "addressForm", "inviteRegister", "newProof", "requirements", "todos"].includes(v)
+        document.getElementById("bottom").style.display = ["pointsDetail", "pointsRules", "productDetail", "orders", "orderDetail", "addresses", "addressForm", "inviteRegister", "newProof", "contentShareGuide", "requirements", "todos"].includes(v)
           ? "none"
           : "grid";
         document.getElementById("homeRoleToggle").style.display = v === "home" ? "flex" : "none";
         document.getElementById("mobile").classList.toggle("rules-mode", v === "pointsRules");
         if (v === "tasks") renderProofRecords("all");
+        if (v === 'contentShareGuide') document.querySelector('#mobile .content').scrollTop = 0;
         if (v === "home" || v === "todos") renderContentShareTodos();
       }
       function switchHomeRole(){const next=role==='personal'?'company':'personal';setRole(next);showView('home');notify(next==='company'?'已切换为企业身份':'已切换为个人身份')}
@@ -2830,6 +2851,21 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         return proof.attachments || Array.from({length:proof.images},(_,index)=>({name:'分享截图 '+(index+1),src:'assets/proof-reference.png'}));
       }
       function proofFilter(status) { renderProofRecords(status); }
+      function hasSeenContentShareGuide() {
+        if (contentShareGuideAcknowledged) return true;
+        try { return localStorage.getItem('tk-content-share-guide-v1:'+contentShareUser.id) === '1'; }
+        catch { return false; }
+      }
+      function finishContentShareGuide() {
+        contentShareGuideAcknowledged = true;
+        try { localStorage.setItem('tk-content-share-guide-v1:'+contentShareUser.id,'1'); } catch {}
+        showView('tasks');
+        document.querySelector('#mobile .content').scrollTop = 0;
+      }
+      function contentShareInstructions(activity) {
+        const video=activity.source==='视频号';
+        return '<div class="content-share-instructions"><strong>操作说明</strong><p>先点击<b>【'+(video?'打开视频号':'打开文章')+'】</b>，在'+(video?'视频号':'公众号')+'页面查看内容，并通过分享功能分享到<b>微信朋友圈</b>。截图保存到本地相册后，返回<b>【通快客户积分中心】</b>的内容分享页面，点击<b>【补全凭证】</b>上传截图，再点击<b>【提交审核】</b>，等待运营人员审核。</p></div>';
+      }
       function contentSourceCard(activity) {
         const article=activity.source==='公众号';
         const action=article
@@ -2848,7 +2884,7 @@ body[data-screen="phone"] .stage{display:grid;grid-template-columns:1fr;place-it
         const activities = shareActivities.filter(activity=>activity.enabled && activity.start<=contentShareToday() && (status==='all'||contentShareState(activity)===status));
         document.getElementById('taskArea').innerHTML = activities.map(activity=>{
           const proof=ownActivityProof(activity.id), state=contentShareState(activity), enabled=canCompleteProof(activity);
-          return '<article class="proof-record" data-content-activity="'+activity.id+'" data-content-status="'+state+'"><header><div class="proof-tags"><span>'+escapeShareText(activity.source)+'</span><span>'+escapeShareText(activity.channel)+'</span></div>'+contentShareBadge(state)+'</header><h3>'+escapeShareText(activity.name)+'</h3>'+contentSourceCard(activity)+'<p>活动周期：'+activity.start+' 至 '+activity.end+'</p>'+(proof?'<p>▧ '+proof.images+' 张附件 · '+escapeShareText(proof.time)+'</p>':'<p>分享活动内容后，上传截图补全凭证。</p>')+(state==='expired'?'<p class="reason">活动已结束，无法补全凭证。</p>':state==='rejected'?'<p class="reason">'+escapeShareText(proof.reason)+'</p>':'')+'<footer><div><button onclick="openProofDetail(\''+activity.id+'\')">查看详情</button><button class="primary" '+(enabled?'':'disabled title="'+(state==='expired'?'活动已过期':'已提交凭证，无需重复补全')+'"')+' onclick="completeActivityProof(\''+activity.id+'\')">补全凭证</button></div></footer></article>';
+          return '<article class="proof-record" data-content-activity="'+activity.id+'" data-content-status="'+state+'"><header><div class="proof-tags"><span>'+escapeShareText(activity.source)+'</span><span>'+escapeShareText(activity.channel)+'</span></div>'+contentShareBadge(state)+'</header><h3>'+escapeShareText(activity.name)+'</h3>'+contentSourceCard(activity)+contentShareInstructions(activity)+'<p>活动周期：'+activity.start+' 至 '+activity.end+'</p>'+(proof?'<p>▧ '+proof.images+' 张附件 · '+escapeShareText(proof.time)+'</p>':'')+(state==='expired'?'<p class="reason">活动已结束，无法补全凭证。</p>':state==='rejected'?'<p class="reason">'+escapeShareText(proof.reason)+'</p>':'')+'<footer><div><button class="primary" '+(enabled?'':'disabled title="'+(state==='expired'?'活动已过期':'已提交凭证，无需重复补全')+'"')+' onclick="completeActivityProof(\''+activity.id+'\')">补全凭证</button></div></footer></article>';
         }).join('') || '<div class="content-share-empty">暂无'+(status==='all'?'可参与的活动':'该状态的活动')+'</div>';
         renderContentShareTodos();
       }
